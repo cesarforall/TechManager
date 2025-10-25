@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Core.Interfaces;
 using Core.Models;
+using Core.Exceptions;
 
 namespace Data
 {
@@ -34,39 +35,53 @@ namespace Data
 
         public async Task<int> create(Tecnico tecnico)
         {
-            var connection  = new SqliteConnection(_connectionString);
-            await connection.OpenAsync();
-            using var command = connection.CreateCommand();
-            command.CommandText = """
-                INSERT INTO tecnicos (nombre, apellidos, gaveta, nombre_pc, usuario_pc)
-                VALUES ($nombre, $apellidos, $gaveta, $nombre_pc, $usuario_pc);
-                SELECT last_insert_rowid();
-            """;
-            command.Parameters.AddWithValue("$nombre", tecnico.Nombre);
-            command.Parameters.AddWithValue("$apellidos", tecnico.Apellidos);
-            // Si la propiedad es null, se asigna DBNull.Value para almacenar NULL en la base de datos
-            command.Parameters.AddWithValue("$gaveta", tecnico.Gaveta ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("$nombre_pc", tecnico.NombrePC ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("$usuario_pc", tecnico.UsuarioPC ?? (object)DBNull.Value);
+            try
+            {
+                using var connection  = new SqliteConnection(_connectionString);
+                await connection.OpenAsync();
+                using var command = connection.CreateCommand();
+                command.CommandText = """
+                    INSERT INTO tecnicos (nombre, apellidos, gaveta, nombre_pc, usuario_pc)
+                    VALUES ($nombre, $apellidos, $gaveta, $nombre_pc, $usuario_pc);
+                    SELECT last_insert_rowid();
+                """;
+                command.Parameters.AddWithValue("$nombre", tecnico.Nombre);
+                command.Parameters.AddWithValue("$apellidos", tecnico.Apellidos);
+                // Si la propiedad es null, se asigna DBNull.Value para almacenar NULL en la base de datos
+                command.Parameters.AddWithValue("$gaveta", tecnico.Gaveta ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("$nombre_pc", tecnico.NombrePC ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("$usuario_pc", tecnico.UsuarioPC ?? (object)DBNull.Value);
 
-            var id = await command.ExecuteScalarAsync();
-            return Convert.ToInt32(id);
+                var id = await command.ExecuteScalarAsync();
+                return Convert.ToInt32(id);
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException($"Error al crear el técnico: {ex.Message}");
+            }
         }
 
         public async Task<bool> delete(int id)
         {
-            using var connection = new SqliteConnection(_connectionString);
-            await connection.OpenAsync();
-            using var command = connection.CreateCommand();
-            command.CommandText = """
-                DELETE FROM tecnicos
-                WHERE id = $id
-            """;
-            command.Parameters.AddWithValue("$id", id);
+            try
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                await connection.OpenAsync();
+                using var command = connection.CreateCommand();
+                command.CommandText = """
+                    DELETE FROM tecnicos
+                    WHERE id = $id
+                """;
+                command.Parameters.AddWithValue("$id", id);
 
-            var rowsAffected = await command.ExecuteNonQueryAsync();
+                var rowsAffected = await command.ExecuteNonQueryAsync();
 
-            return rowsAffected > 0;
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException($"Error al eliminar el técnico: {ex.Message}");
+            }
         }
 
         public async Task<List<Tecnico>> getAll()
@@ -90,7 +105,7 @@ namespace Data
                     Nombre = reader.GetString(1),
                     Apellidos = reader.GetString(2),
                     // Asignación de null a la propiedad que se ha almacenado como NULL en la base de datos
-                    Gaveta = reader.IsDBNull(3) ? null : reader.GetString(3),
+                    Gaveta = reader.IsDBNull(3) ? null : reader.GetInt32(3),
                     NombrePC = reader.IsDBNull(4) ? null : reader.GetString(4),
                     UsuarioPC = reader.IsDBNull(5) ? null : reader.GetString(5)
                 };
@@ -120,7 +135,7 @@ namespace Data
                     Id = reader.GetInt32(0),
                     Nombre = reader.GetString(1),
                     Apellidos = reader.GetString(2),                    
-                    Gaveta = reader.IsDBNull(3) ? null : reader.GetString(3),
+                    Gaveta = reader.IsDBNull(3) ? null : reader.GetInt32(3),
                     NombrePC = reader.IsDBNull(4) ? null : reader.GetString(4),
                     UsuarioPC = reader.IsDBNull(5) ? null : reader.GetString(5)
                 };
@@ -131,28 +146,97 @@ namespace Data
 
         public async Task<bool> update(Tecnico tecnico)
         {
+            try
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                await connection.OpenAsync();
+                using var command = connection.CreateCommand();
+                command.CommandText = """
+                    UPDATE tecnicos
+                    SET nombre = $nombre,
+                        apellidos = $apellidos,
+                        gaveta = $gaveta,
+                        nombre_pc = $nombre_pc,
+                        usuario_pc = $usuario_pc
+                    WHERE id = $id
+                """;
+                command.Parameters.AddWithValue("$id", tecnico.Id);
+                command.Parameters.AddWithValue("$nombre", tecnico.Nombre);
+                command.Parameters.AddWithValue("$apellidos", tecnico.Apellidos);
+                command.Parameters.AddWithValue("$gaveta", tecnico.Gaveta ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("$nombre_pc", tecnico.NombrePC ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("$usuario_pc", tecnico.UsuarioPC ?? (object)DBNull.Value);
+
+                var rowsAffected = await command.ExecuteNonQueryAsync();
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException($"Error al actualizar el técnico: {ex.Message}");
+            }
+        }
+
+        public async Task<Tecnico?> getByGaveta(int id)
+        {
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
+
             using var command = connection.CreateCommand();
             command.CommandText = """
-                UPDATE tecnicos
-                SET nombre = $nombre,
-                    apellidos = $apellidos,
-                    gaveta = $gaveta,
-                    nombre_pc = $nombre_pc,
-                    usuario_pc = $usuario_pc
-                WHERE id = $id
+                SELECT id, nombre, apellidos, gaveta, nombre_pc, usuario_pc
+                FROM tecnicos
+                WHERE gaveta = $gaveta
             """;
-            command.Parameters.AddWithValue("$id", tecnico.Id);
-            command.Parameters.AddWithValue("$nombre", tecnico.Nombre);
-            command.Parameters.AddWithValue("$apellidos", tecnico.Apellidos);
-            command.Parameters.AddWithValue("$gaveta", tecnico.Gaveta ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("$nombre_pc", tecnico.NombrePC ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("$usuario_pc", tecnico.UsuarioPC ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("$gaveta", id);
 
-            var rowsAffected = await command.ExecuteNonQueryAsync();
+            using var reader = await command.ExecuteReaderAsync();
 
-            return rowsAffected > 0;
+            if (await reader.ReadAsync())
+            {
+                return new Tecnico
+                {
+                    Id = reader.GetInt32(0),
+                    Nombre = reader.GetString(1),
+                    Apellidos = reader.GetString(2),
+                    Gaveta = reader.IsDBNull(3) ? null : reader.GetInt32(3),
+                    NombrePC = reader.IsDBNull(4) ? null : reader.GetString(4),
+                    UsuarioPC = reader.IsDBNull(5) ? null : reader.GetString(5)
+                };
+            }
+
+            return null;
+        }
+
+        public async Task<Tecnico?> getByNombrePC(string nombrePC)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = """
+                SELECT id, nombre, apellidos, gaveta, nombre_pc, usuario_pc
+                FROM tecnicos
+                WHERE nombre_pc = $nombre_pc
+            """;
+            command.Parameters.AddWithValue("$nombre_pc", nombrePC);
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                return new Tecnico
+                {
+                    Id = reader.GetInt32(0),
+                    Nombre = reader.GetString(1),
+                    Apellidos = reader.GetString(2),
+                    Gaveta = reader.IsDBNull(3) ? null : reader.GetInt32(3),
+                    NombrePC = reader.IsDBNull(4) ? null : reader.GetString(4),
+                    UsuarioPC = reader.IsDBNull(5) ? null : reader.GetString(5)
+                };
+            }
+
+            return null;
         }
     }
 }

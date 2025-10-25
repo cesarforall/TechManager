@@ -6,7 +6,7 @@
         public int Id { get; init; }
         public required string Nombre { get; set; }
         public required string Apellidos { get; set; }
-        public string? Gaveta { get; set; }
+        public int? Gaveta { get; set; }
         public string? NombrePC { get; set; }
         public string? UsuarioPC { get; set; }
     }
