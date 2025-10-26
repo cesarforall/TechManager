@@ -5,8 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TechManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="TechManager v1.0.0" Height="640" Width="1024">
+    <Grid Background="#F9F9F9">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
+        <Border BorderBrush="Black" BorderThickness="0,0,2,0">
+            <StackPanel Background="#F2F2F2">
+                <TextBlock
+                    Text="Tech Manager"
+                    FontSize="28"
+                    FontWeight="DemiBold"
+                    HorizontalAlignment="Stretch"
+                    TextAlignment="Center"
+                    Margin="0,60,0,0"/>
+                
+                <Button
+                    Click="OpenTecnicosView"
+                    Content="Técnicos" FontSize="24"
+                    HorizontalAlignment="Stretch"
+                    Background="Transparent"
+                    BorderThickness="0" Margin="0,40,0,0"
+                    Padding="10"/>
+                
+            </StackPanel>
+        </Border>
+
+        <ContentControl x:Name="MainContainer" Grid.Column="1"/>
     </Grid>
 </Window>
