@@ -63,9 +63,26 @@ namespace Core
             } 
         }
 
-        public Task<(bool success, string message)> delete(int id)
+        public async Task<(bool success, string message)> delete(int id)
         {
-            throw new NotImplementedException();
+            if (id <= 0)
+            {
+                return (false, "ID de técnico inválido.");
+            }
+            try
+            {
+                bool result = await _tecnicoRepository.delete(id);
+
+                if (result)
+                {
+                    return (true, "Técnico eliminado correctamente.");
+                }
+                return (false, $"No se encontró el técnico con el ID: {id}.");
+            }
+            catch (Exception)
+            {
+                return (false, "Error al eliminar el técnico.");
+            }
         }
 
         public Task<(bool success, string message, List<Tecnico>?)> getAll()
@@ -83,9 +100,66 @@ namespace Core
             throw new NotImplementedException();
         }
 
-        public Task<(bool success, string message)> update(Tecnico tecnico)
+        public async Task<(bool success, string message)> update(Tecnico tecnico)
         {
-            throw new NotImplementedException();
+            if (tecnico.Id <= 0)
+            {
+                return (false, "El ID del técnico no es válido.");
+            }
+            if (string.IsNullOrWhiteSpace(tecnico.Nombre))
+            {
+                return (false, "El nombre del técnico es obligatorio.");
+            }
+            if (string.IsNullOrWhiteSpace(tecnico.Apellidos))
+            {
+                return (false, "Los apellidos del técnico son obligatorios.");
+            }
+            if (tecnico.Gaveta != null && tecnico.Gaveta > 0)
+            {
+                try
+                {
+                    var tecnicoByGaveta = await _tecnicoRepository.getByGaveta(tecnico.Gaveta.Value);
+                    if (tecnicoByGaveta != null && tecnicoByGaveta.Id != tecnico.Id)
+                    {
+                        return (false, "La gaveta del técnico ya está asignada otro técnico.");
+                    }
+                }
+                catch (Exception)
+                {
+                    return (false, "Error al comprobar la gaveta.");
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(tecnico.NombrePC))
+            {
+                try
+                {
+                    var tecnicoByNombrePC = await _tecnicoRepository.getByNombrePC(tecnico.NombrePC);
+                    if (tecnicoByNombrePC != null && tecnicoByNombrePC.Id != tecnico.Id)
+                    {
+                        return (false, "El PC ya está asignado a otro técnico.");
+                    }
+                }
+                catch (Exception)
+                {
+                    return (false, "Error al comprobar el nombre del PC.");
+                }
+            }
+            try
+            {
+                var result = await _tecnicoRepository.update(tecnico);
+                if (result)
+                {
+                    return (true, "Técnico actualizado correctamente.");
+                }
+                else
+                {
+                    return (false, $"No se encontró el técnico con el ID: {tecnico.Id}.");
+                }
+            }
+            catch (Exception)
+            {
+                return (false, "Error al crear el técnico");
+            }
         }
     }
 }
