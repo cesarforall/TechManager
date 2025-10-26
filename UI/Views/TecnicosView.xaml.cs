@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Windows.Controls;
+using UI.ViewModels;
 
 namespace UI.Views
 {
@@ -7,9 +9,10 @@ namespace UI.Views
     /// </summary>
     public partial class TecnicosView : UserControl
     {
-        public TecnicosView()
+        public TecnicosView(IServiceProvider serviceProvider)
         {
             InitializeComponent();
+            DataContext = serviceProvider.GetRequiredService<TecnicosViewModel>();
         }
     }
 }

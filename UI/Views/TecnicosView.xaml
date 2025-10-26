@@ -27,6 +27,7 @@
         <DataGrid
             x:Name="TecnicosDataGrid"
             Grid.Row="1"
+            ItemsSource="{Binding Tecnicos}"
             Margin="0,30,0,0"
             BorderThickness="0"
             Background="Transparent"

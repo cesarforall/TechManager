@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Core.Interfaces;
+using Core.Services;
+using Data;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
+using UI.ViewModels;
 using UI.Views;
 
 namespace TechManager
@@ -24,8 +28,20 @@ namespace TechManager
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<MainWindow>();
+            string connectionString = "Data Source=techmanager.db";
+
+            // Data
+            services.AddTransient<ITecnicoRepository>(provider => new TecnicoRepository(connectionString));
+
+            // Core
+            // Cada vez que se solicite ITecnicoService, se creará una nueva instancia de TecnicoService
+            services.AddTransient<ITecnicoService, TecnicoService>();
+
+            // UI
+            services.AddTransient<TecnicosViewModel>();
             services.AddTransient<TecnicosView>();
+
+            services.AddSingleton<MainWindow>();
         }
     }
 
