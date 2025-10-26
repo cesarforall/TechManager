@@ -85,19 +85,59 @@ namespace Core
             }
         }
 
-        public Task<(bool success, string message, List<Tecnico>?)> getAll()
+        public async Task<(bool success, string message, List<Tecnico>?)> getAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var tecnicos = await _tecnicoRepository.getAll();
+                return (true, "Técnicos obtenidos correctamente.", tecnicos);
+            }
+            catch (Exception)
+            {
+                return (false, "Error al obtener los técnicos.", null);
+            }
         }
 
-        public Task<(bool success, string message, Tecnico?)> getByGaveta(int gaveta)
+        public async Task<(bool success, string message, Tecnico?)> getByGaveta(int gaveta)
         {
-            throw new NotImplementedException();
+            if (gaveta <= 0)
+            {
+                return (false, "Número de gaveta inválido.", null);
+            }
+            try
+            {
+                var tecnicoByGaveta = await _tecnicoRepository.getByGaveta(gaveta);
+                if (tecnicoByGaveta == null)
+                {
+                    return (false, "No se encontró ningún técnico con la gaveta proporcionada.", null);
+                }
+                return (true, "Técnico por gaveta obtenido correctamente.", tecnicoByGaveta);
+            }
+            catch (Exception)
+            {
+                return (false, "Error al obtener el técnico por gaveta.", null);
+            }
         }
 
-        public Task<(bool success, string message, Tecnico?)> getById(int id)
+        public async Task<(bool success, string message, Tecnico?)> getById(int id)
         {
-            throw new NotImplementedException();
+            if (id <= 0)
+            {
+                return (false, "ID de técnico inválido.", null);
+            }
+            try
+            {
+                var tecnicoById = await _tecnicoRepository.getById(id);
+                if (tecnicoById == null)
+                {
+                    return (false, "No se encontró ningún técnico con el ID proporcionado.", null);
+                }
+                return (true, "Técnico obtenido correctamente.", tecnicoById);
+            }
+            catch (Exception)
+            {
+                return (false, "Error al obtener el técnico por Id.", null);
+            }
         }
 
         public async Task<(bool success, string message)> update(Tecnico tecnico)
