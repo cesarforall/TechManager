@@ -6,9 +6,9 @@ namespace Core.Interfaces
     {
         Task<(bool success, string message, int id)> create(Tecnico tecnico);
         Task<(bool success, string message)> delete(int id);
-        Task<List<Tecnico>> getAll();
-        Task<Tecnico?> getById(int id);
+        Task<(bool success, string message, List<Tecnico>?)> getAll();
+        Task<(bool success, string message, Tecnico?)> getById(int id);
         Task<(bool success, string message)> update(Tecnico tecnico);
-        Task<Tecnico?> getByGaveta(int gaveta);
+        Task<(bool success, string message, Tecnico?)> getByGaveta(int gaveta);
     }
 }

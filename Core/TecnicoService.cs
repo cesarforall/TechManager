@@ -68,17 +68,17 @@ namespace Core
             throw new NotImplementedException();
         }
 
-        public Task<List<Tecnico>> getAll()
+        public Task<(bool success, string message, List<Tecnico>?)> getAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Tecnico?> getByGaveta(int gaveta)
+        public Task<(bool success, string message, Tecnico?)> getByGaveta(int gaveta)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Tecnico?> getById(int id)
+        public Task<(bool success, string message, Tecnico?)> getById(int id)
         {
             throw new NotImplementedException();
         }
