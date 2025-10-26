@@ -1,7 +1,7 @@
 ﻿using Core.Interfaces;
 using Core.Models;
 
-namespace Core
+namespace Core.Services
 {
     public class TecnicoService : ITecnicoService
     {
@@ -85,7 +85,7 @@ namespace Core
             }
         }
 
-        public async Task<(bool success, string message, List<Tecnico>?)> getAll()
+        public async Task<(bool success, string message, List<Tecnico>? tecnicos)> getAll()
         {
             try
             {
@@ -98,7 +98,7 @@ namespace Core
             }
         }
 
-        public async Task<(bool success, string message, Tecnico?)> getByGaveta(int gaveta)
+        public async Task<(bool success, string message, Tecnico? tecnico)> getByGaveta(int gaveta)
         {
             if (gaveta <= 0)
             {
@@ -119,7 +119,7 @@ namespace Core
             }
         }
 
-        public async Task<(bool success, string message, Tecnico?)> getById(int id)
+        public async Task<(bool success, string message, Tecnico? tecnico)> getById(int id)
         {
             if (id <= 0)
             {
