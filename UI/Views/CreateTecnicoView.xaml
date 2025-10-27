@@ -1,0 +1,76 @@
+﻿<Window x:Class="UI.Views.CreateTecnicoView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UI.Views"
+        mc:Ignorable="d"
+        Title="Nuevo técnico" Height="440" Width="400" Background="#F2F2F2" WindowStartupLocation="CenterScreen">
+    <Grid HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Text="Nuevo Técnico" FontSize="18" FontWeight="DemiBold" VerticalAlignment="Center" Margin="0,20,0,0"/>
+        <Grid Grid.Row="1" Margin="0,30,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Nombre:" Grid.Row="0" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
+            <TextBox x:Name="TextBoxNombre" Grid.Row="0" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBlock Text="Apellidos:" Grid.Row="1" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
+            <TextBox x:Name="TextBoxApellidos" Grid.Row="1" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBlock Text="Gaveta:" Grid.Row="2" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
+            <TextBox x:Name="TextBoxGaveta" Grid.Row="2" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBlock Text="NombrePC:" Grid.Row="3" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
+            <TextBox x:Name="TextBoxNombrePC" Grid.Row="3" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBlock Text="UsuarioPC:" Grid.Row="4" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
+            <TextBox x:Name="TextBoxUsuarioPC" Grid.Row="4" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+
+        </Grid>
+            
+        <TextBlock Grid.Row="2" x:Name="TextBlockMessage" Text="Los datos no son vávidos" FontSize="14" Margin="0,30"/>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Button
+                Grid.Column="0"
+                Content="Cancelar"
+                Command="{Binding Binding CancelNuevoTecnico}"
+                Width="120"
+                Padding="8"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
+                Background="#ECECEC"
+                FontSize="14"
+                FontWeight="DemiBold"/>
+            <Button
+                Grid.Column="1"
+                Content="Guardar"
+                Command="{Binding Binding SaveNuevoTecnico}"
+                Width="120"
+                Padding="8"
+                Margin="0,0,10,0"
+                HorizontalAlignment="Right"
+                Background="#ECECEC"
+                FontSize="14"
+                FontWeight="DemiBold"/>
+        </Grid>
+    </Grid>
+</Window>

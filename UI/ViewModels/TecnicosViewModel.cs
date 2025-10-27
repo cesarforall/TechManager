@@ -1,18 +1,25 @@
 ﻿using Core.Interfaces;
 using Core.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using UI.MVVM;
+using UI.Views;
 
 namespace UI.ViewModels
 {
     public class TecnicosViewModel : ViewModelBase
     {
         private readonly ITecnicoService _tecnicoService;
-        ObservableCollection<Tecnico> _tecnicos;
+        private readonly IServiceProvider _serviceProvider;
 
-        public TecnicosViewModel(ITecnicoService tecnicoService)
+        ObservableCollection<Tecnico> _tecnicos;
+        public RelayCommand OpenCreateTecnicoViewCommand => new RelayCommand(execute => OpenCreateTecnicoView());
+
+        public TecnicosViewModel(ITecnicoService tecnicoService, IServiceProvider serviceProvider)
         {
             _tecnicoService = tecnicoService;
+            _serviceProvider = serviceProvider;
             _tecnicos = new ObservableCollection<Tecnico>();
             InitializeAsync();
         }
@@ -40,6 +47,11 @@ namespace UI.ViewModels
             {
                 Tecnicos = new ObservableCollection<Tecnico>(result.tecnicos);
             }
+        }
+
+        private void OpenCreateTecnicoView()
+        {
+            _serviceProvider.GetRequiredService<CreateTecnicoView>().Show();
         }
     }
 }
