@@ -41,6 +41,7 @@ namespace TechManager
             services.AddTransient<TecnicosViewModel>();
             services.AddTransient<TecnicosView>();
 
+            services.AddTransient<CreateTecnicoViewModel>();
             services.AddTransient<CreateTecnicoView>();
 
             services.AddSingleton<MainWindow>();

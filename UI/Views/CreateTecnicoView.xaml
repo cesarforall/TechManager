@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI.Views"
         mc:Ignorable="d"
-        Title="Nuevo técnico" Height="440" Width="400" Background="#F2F2F2" WindowStartupLocation="CenterScreen">
+        Title="Nuevo técnico" Height="460" Width="420" Background="#F2F2F2" WindowStartupLocation="CenterScreen">
     <Grid HorizontalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,10 +15,10 @@
         </Grid.RowDefinitions>
         
         <TextBlock Grid.Row="0" Text="Nuevo Técnico" FontSize="18" FontWeight="DemiBold" VerticalAlignment="Center" Margin="0,20,0,0"/>
-        <Grid Grid.Row="1" Margin="0,30,0,0">
+        <Grid Grid.Row="1" Margin="0,30,0,0" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -30,19 +30,19 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="Nombre:" Grid.Row="0" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
-            <TextBox x:Name="TextBoxNombre" Grid.Row="0" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="TextBoxNombre" Text="{Binding Tecnico.Nombre, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             <TextBlock Text="Apellidos:" Grid.Row="1" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
-            <TextBox x:Name="TextBoxApellidos" Grid.Row="1" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="TextBoxApellidos" Text="{Binding Tecnico.Apellidos, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             <TextBlock Text="Gaveta:" Grid.Row="2" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
-            <TextBox x:Name="TextBoxGaveta" Grid.Row="2" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="TextBoxGaveta" Text="{Binding Tecnico.Gaveta, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             <TextBlock Text="NombrePC:" Grid.Row="3" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
-            <TextBox x:Name="TextBoxNombrePC" Grid.Row="3" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="TextBoxNombrePC" Text="{Binding Tecnico.NombrePC, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             <TextBlock Text="UsuarioPC:" Grid.Row="4" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
-            <TextBox x:Name="TextBoxUsuarioPC" Grid.Row="4" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="TextBoxUsuarioPC" Text="{Binding Tecnico.UsuarioPC, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
 
         </Grid>
             
-        <TextBlock Grid.Row="2" x:Name="TextBlockMessage" Text="Los datos no son vávidos" FontSize="14" Margin="0,30"/>
+        <TextBlock Grid.Row="2" x:Name="TextBlockMessage" Text="{Binding Message}" Foreground="{Binding MessageColor}" FontSize="14" Margin="0,30"/>
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -52,7 +52,7 @@
             <Button
                 Grid.Column="0"
                 Content="Cancelar"
-                Command="{Binding Binding CancelNuevoTecnico}"
+                Command="{Binding CancelNuevoTecnicoCommand}"
                 Width="120"
                 Padding="8"
                 Margin="10,0,0,0"
@@ -63,7 +63,7 @@
             <Button
                 Grid.Column="1"
                 Content="Guardar"
-                Command="{Binding Binding SaveNuevoTecnico}"
+                Command="{Binding SaveNuevoTecnicoCommand}"
                 Width="120"
                 Padding="8"
                 Margin="0,0,10,0"

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using UI.ViewModels;
 
 namespace UI.Views
 {
@@ -7,9 +8,14 @@ namespace UI.Views
     /// </summary>
     public partial class CreateTecnicoView : Window
     {
-        public CreateTecnicoView()
+        public CreateTecnicoView(CreateTecnicoViewModel viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel;
+
+            // Se suscribe al evento RequestClose del ViewModel
+            viewModel.RequestClose += (s, e) => this.Close();
         }
     }
 }
+
