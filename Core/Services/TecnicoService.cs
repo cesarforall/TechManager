@@ -14,6 +14,10 @@ namespace Core.Services
 
         public async Task<(bool success, string message, int id)> create(Tecnico tecnico)
         {
+            if (tecnico == null)
+            {
+                return (false, "Los datos del técnico no pueden estar vacíos.", 0);
+            }
             if (string.IsNullOrWhiteSpace(tecnico.Nombre))
             {
                 return (false, "El nombre del técnico es obligatorio.", 0);
