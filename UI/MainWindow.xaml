@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TechManager"
         mc:Ignorable="d"
-        Title="TechManager v1.0.0" Height="640" Width="1024">
+        Title="TechManager v1.0.0" Height="640" Width="1024" WindowStartupLocation="CenterScreen">
     <Grid Background="#F9F9F9">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
