@@ -2,7 +2,7 @@
 using Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
+using System.Windows;
 using UI.MVVM;
 using UI.Views;
 
@@ -14,7 +14,9 @@ namespace UI.ViewModels
         private readonly IServiceProvider _serviceProvider;
 
         ObservableCollection<Tecnico> _tecnicos;
+        Tecnico _selectedTecnico;
         public RelayCommand OpenCreateTecnicoViewCommand => new RelayCommand(execute => OpenCreateTecnicoView());
+        public RelayCommand DeleteTecnicoCommand => new RelayCommand(execute => DeleteTecnico(execute));
 
         public TecnicosViewModel(ITecnicoService tecnicoService, IServiceProvider serviceProvider)
         {
@@ -40,7 +42,8 @@ namespace UI.ViewModels
             await LoadTecnicosAsync();
         }
 
-        public async Task LoadTecnicosAsync() {
+        public async Task LoadTecnicosAsync()
+        {
             var result = await _tecnicoService.getAll();
 
             if (result.success && result.tecnicos != null)
@@ -52,6 +55,24 @@ namespace UI.ViewModels
         private void OpenCreateTecnicoView()
         {
             _serviceProvider.GetRequiredService<CreateTecnicoView>().Show();
+        }
+
+        private async void DeleteTecnico(object parameter)
+        {
+            if (parameter is Tecnico tecnico)
+            {
+                if (MessageBox.Show($"¿Desea eliminar el técnico con ID: {tecnico.Id}?\n\n- Perderá todos los datos asociados al técnico.",
+                    "Eliminar técnico",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    var result = await _tecnicoService.delete(tecnico.Id);
+                    if (result.success)
+                    {
+                        Tecnicos.Remove(tecnico);
+                    }
+                }
+            }
         }
     }
 }

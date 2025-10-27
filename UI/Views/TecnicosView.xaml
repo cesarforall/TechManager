@@ -29,6 +29,7 @@
             x:Name="TecnicosDataGrid"
             Grid.Row="1"
             ItemsSource="{Binding Tecnicos}"
+            SelectedItem="{Binding SelectedTecnico, Mode=TwoWay}"
             Margin="0,30,0,0"
             BorderThickness="0"
             Background="Transparent"
@@ -97,6 +98,8 @@
                                 
                                 <Button
                                     Content="🗑️"
+                                    Command="{Binding DataContext.DeleteTecnicoCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding}"
                                     Padding="5"
                                     Background="Transparent"
                                     FontWeight="DemiBold"/>
