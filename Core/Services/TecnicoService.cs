@@ -158,6 +158,10 @@ namespace Core.Services
             {
                 return (false, "Los apellidos del técnico son obligatorios.");
             }
+            if (tecnico.Gaveta <= 0)
+            {
+                return (false, "Introduzca una gaveta válida.");
+            }
             if (tecnico.Gaveta != null && tecnico.Gaveta > 0)
             {
                 try
@@ -165,7 +169,7 @@ namespace Core.Services
                     var tecnicoByGaveta = await _tecnicoRepository.getByGaveta(tecnico.Gaveta.Value);
                     if (tecnicoByGaveta != null && tecnicoByGaveta.Id != tecnico.Id)
                     {
-                        return (false, "La gaveta del técnico ya está asignada otro técnico.");
+                        return (false, "La gaveta ya está asignada otro técnico.");
                     }
                 }
                 catch (Exception)
