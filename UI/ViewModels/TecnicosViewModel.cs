@@ -17,6 +17,7 @@ namespace UI.ViewModels
         Tecnico _selectedTecnico;
         public RelayCommand OpenCreateTecnicoViewCommand => new RelayCommand(execute => OpenCreateTecnicoView());
         public RelayCommand DeleteTecnicoCommand => new RelayCommand(execute => DeleteTecnico(execute));
+        public RelayCommand OpenEditTecnicoViewCommand => new RelayCommand(execute => OpenEditTecnicoView(execute));
 
         public TecnicosViewModel(ITecnicoService tecnicoService, IServiceProvider serviceProvider)
         {
@@ -72,6 +73,17 @@ namespace UI.ViewModels
                         Tecnicos.Remove(tecnico);
                     }
                 }
+            }
+        }
+
+        private void OpenEditTecnicoView(object parameter)
+        {
+            if (parameter is Tecnico tecnico)
+            {
+                var updateTecnicoView = _serviceProvider.GetRequiredService<UpdateTecnicoView>();
+                var updateTecnicoViewModel = updateTecnicoView.DataContext as UpdateTecnicoViewModel;
+                updateTecnicoViewModel.Initialize(tecnico);
+                updateTecnicoView.Show();
             }
         }
     }

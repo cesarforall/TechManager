@@ -38,6 +38,9 @@ namespace TechManager
             services.AddTransient<ITecnicoService, TecnicoService>();
 
             // UI
+            services.AddTransient<UpdateTecnicoViewModel>();
+            services.AddTransient<UpdateTecnicoView>();
+
             services.AddTransient<TecnicosViewModel>();
             services.AddTransient<TecnicosView>();
 

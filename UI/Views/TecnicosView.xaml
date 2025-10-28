@@ -92,6 +92,8 @@
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                 <Button
                                     Content="✏️"
+                                    Command="{Binding DataContext.OpenEditTecnicoViewCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding}"
                                     Padding="5"
                                     Background="Transparent"
                                     FontWeight="DemiBold"/>
