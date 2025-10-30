@@ -158,7 +158,7 @@ namespace Core.Services
             {
                 return (false, "Los apellidos del técnico son obligatorios.");
             }
-            if (tecnico.Gaveta <= 0)
+            if (tecnico.Gaveta.HasValue && tecnico.Gaveta.Value <= 0)
             {
                 return (false, "Introduzca una gaveta válida.");
             }
