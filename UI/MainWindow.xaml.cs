@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using UI.Views;
 
@@ -15,6 +17,11 @@ namespace TechManager
         {
             _serviceProvider = serviceProvicer;
             InitializeComponent();
+
+            // Lee la versión dentro de csproj
+            var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+            var cleanVersion = fullVersion.Split('+')[0];
+            Title = $"TechManager v{cleanVersion}";
         }
 
         private void OpenTecnicosView(object sender, RoutedEventArgs e)
