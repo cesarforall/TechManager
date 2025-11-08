@@ -28,5 +28,10 @@ namespace TechManager
         {
             MainContainer.Content = _serviceProvider.GetRequiredService<TecnicosView>();
         }
+
+        private void OpenDispositivosView(object sender, RoutedEventArgs e)
+        {
+            MainContainer.Content = _serviceProvider.GetRequiredService<DispositivosView>();
+        }
     }
 }

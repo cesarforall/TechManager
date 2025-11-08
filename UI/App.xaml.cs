@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces;
 using Core.Services;
 using Data;
+using Data.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using UI.ViewModels;
@@ -32,10 +33,12 @@ namespace TechManager
 
             // Data
             services.AddTransient<ITecnicoRepository>(provider => new TecnicoRepository(connectionString));
+            services.AddTransient<IDispositivoRepository>(provider => new DispositivoRepository(connectionString));
 
             // Core
             // Cada vez que se solicite ITecnicoService, se creará una nueva instancia de TecnicoService
             services.AddTransient<ITecnicoService, TecnicoService>();
+            services.AddTransient<IDispositivoService, DispositivoService>();
 
             // UI
             services.AddTransient<UpdateTecnicoViewModel>();
@@ -46,6 +49,13 @@ namespace TechManager
 
             services.AddTransient<CreateTecnicoViewModel>();
             services.AddTransient<CreateTecnicoView>();
+
+            // UI - Dispositivos
+            services.AddTransient<DispositivosView>();
+            services.AddTransient<DispositivosViewModel>();
+
+            services.AddTransient<CreateDispositivoViewModel>();
+            services.AddTransient<CreateDispositivoView>();
 
             services.AddSingleton<MainWindow>();
         }
