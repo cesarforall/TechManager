@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core.Exceptions;
+using Core.Interfaces;
 using Core.Models;
 using Microsoft.Data.Sqlite;
 
@@ -37,7 +38,7 @@ namespace Data.Repositories
             }
         }
 
-        public async Task<int> Create(Dispositivo dispositivo)
+        public async Task<int?> Create(Dispositivo dispositivo)
         {
             try
             {
@@ -57,7 +58,7 @@ namespace Data.Repositories
             }
             catch (Exception)
             {
-                return 0;
+                return null;
             }
         }
 
@@ -132,7 +133,7 @@ namespace Data.Repositories
                 command.Parameters.AddWithValue("$id", id);
                 var result = await command.ExecuteReaderAsync();
 
-                while (await result.ReadAsync())
+                if (await result.ReadAsync())
                 {
                     return new Dispositivo
                     {
@@ -176,6 +177,40 @@ namespace Data.Repositories
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public async Task<Dispositivo?> GetByFabricanteModelo(string fabricante, string modelo)
+        {
+            try
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                await connection.OpenAsync();
+
+                using var command = connection.CreateCommand();
+                command.CommandText = """
+                    SELECT id, fabricante, modelo FROM dispositivos WHERE fabricante = $fabricante AND modelo = $modelo;
+                    """;
+                command.Parameters.AddWithValue("$fabricante", fabricante);
+                command.Parameters.AddWithValue("$modelo", modelo);
+
+                var result = await command.ExecuteReaderAsync();
+
+                if (await result.ReadAsync())
+                {
+                    return new Dispositivo
+                    {
+                        Id = result.GetInt32(0),
+                        Fabricante = result.GetString(1),
+                        Modelo = result.GetString(2)
+                    };
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException($"Error al obtener el dispositivo por fabricante y modelo: {ex.Message}");
             }
         }
     }

@@ -140,6 +140,26 @@ namespace Tests.Repositories
             Assert.True(result);
         }
 
+        [Fact]
+        public async void GetByIdFabricanteModeloSuccess()
+        {
+            //Arrange
+            using var command = _connection.CreateCommand();
+            command.CommandText = """
+                INSERT INTO dispositivos (fabricante, modelo) VALUES ('Fabricante 1', 'Modelo 1');
+                INSERT INTO dispositivos (fabricante, modelo) VALUES ('Fabricante 2', 'Modelo 2');
+                INSERT INTO dispositivos (fabricante, modelo) VALUES ('Fabricante 3', 'Modelo 3');
+                """;
+            command.ExecuteNonQuery();
+
+            //Act
+            var tecnico = await _dispositivoRepository.GetByFabricanteModelo("Fabricante 2", "Modelo 2");
+
+            //Assert
+            Assert.Equal("Fabricante 2", tecnico?.Fabricante);
+            Assert.Equal("Modelo 2", tecnico?.Modelo);
+        }
+
         public void Dispose()
         {
             _connection?.Close();
