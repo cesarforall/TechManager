@@ -2,6 +2,7 @@
 using Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
+using System.Windows;
 using UI.MVVM;
 using UI.Views;
 
@@ -15,6 +16,7 @@ namespace UI.ViewModels
         private ObservableCollection<Dispositivo> _dispositivos;
 
         public RelayCommand OpenCreateDispositivoViewCommand => new(execute => OpenCreateDispositivoView());
+        public RelayCommand DeleteDispositivoCommand => new(execute => DeleteDispositivo(execute));
 
         public DispositivosViewModel(IDispositivoService dispositivoService, IServiceProvider serviceProvider)
         {
@@ -53,6 +55,24 @@ namespace UI.ViewModels
         {
             var createDispositivoView = _serviceProvider.GetService<CreateDispositivoView>();
             createDispositivoView?.Show();
+        }
+
+        private async void DeleteDispositivo(object parameter)
+        {
+            if (parameter is Dispositivo dispositivo && dispositivo.Id is int id)
+            {
+                if (MessageBox.Show($"¿Desea eliminar el dispositivo con ID: {id}?\n\n- Perderá todos los datos asociados al dispositivo.",
+                    "Eliminar dispositivo",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    var result = await _dispositivoService.Delete(id);
+                    if (result.success)
+                    {
+                        Dispositivos.Remove(dispositivo);
+                    }
+                }
+            }
         }
     }
 }
