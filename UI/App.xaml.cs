@@ -34,6 +34,7 @@ namespace TechManager
             // Data
             services.AddTransient<ITecnicoRepository>(provider => new TecnicoRepository(connectionString));
             services.AddTransient<IDispositivoRepository>(provider => new DispositivoRepository(connectionString));
+            services.AddTransient<IConocimientoRepository>(provider => new ConocimientoRepository(connectionString));
 
             // Core
             // Cada vez que se solicite ITecnicoService, se creará una nueva instancia de TecnicoService
