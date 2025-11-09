@@ -51,6 +51,9 @@ namespace TechManager
             services.AddTransient<CreateTecnicoView>();
 
             // UI - Dispositivos
+            services.AddTransient<UpdateDispositivoView>();
+            services.AddTransient<UpdateDispositivoViewModel>();
+
             services.AddTransient<DispositivosView>();
             services.AddTransient<DispositivosViewModel>();
 

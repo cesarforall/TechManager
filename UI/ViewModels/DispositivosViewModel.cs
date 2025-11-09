@@ -18,6 +18,8 @@ namespace UI.ViewModels
         public RelayCommand OpenCreateDispositivoViewCommand => new(execute => OpenCreateDispositivoView());
         public RelayCommand DeleteDispositivoCommand => new(execute => DeleteDispositivo(execute));
 
+        public RelayCommand OpenEditDispositivoViewCommand => new(execute => OpenEditTecnicoView(execute));
+
         public DispositivosViewModel(IDispositivoService dispositivoService, IServiceProvider serviceProvider)
         {
             _dispositivoService = dispositivoService;
@@ -55,6 +57,17 @@ namespace UI.ViewModels
         {
             var createDispositivoView = _serviceProvider.GetService<CreateDispositivoView>();
             createDispositivoView?.Show();
+        }
+
+        private void OpenEditTecnicoView(object parameter)
+        {
+            if (parameter is Dispositivo dispositivo)
+            {
+                var updateDispositivoView = _serviceProvider.GetRequiredService<UpdateDispositivoView>();
+                var updateDispositivoViewModel = updateDispositivoView.DataContext as UpdateDispositivoViewModel;
+                updateDispositivoViewModel?.Initialize(dispositivo);
+                updateDispositivoView.Show();
+            }
         }
 
         private async void DeleteDispositivo(object parameter)
