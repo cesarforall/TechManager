@@ -8,5 +8,6 @@
         public int? Gaveta { get; set; }
         public string? NombrePC { get; set; }
         public string? UsuarioPC { get; set; }
+        public string FullName => $"{Nombre} {Apellidos}";
     }
 }
