@@ -1,0 +1,143 @@
+﻿<UserControl x:Class="UI.Views.ConocimientosView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Background="#F9F9F9">
+    <Grid Margin="30, 60, 30, 30" Background="#F9F9F9">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Text="Conocimientos" FontSize="26" FontWeight="DemiBold"/>
+            
+            <Button
+                Grid.Row="1"
+                Content="+ Asociar conocimiento"
+                Command="{Binding OpenCreateConocimientoViewCommand}"
+                Padding="10"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Right"
+                Background="#F2F2F2"
+                FontSize="14"
+                FontWeight="DemiBold" />
+
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Agrupar por:" FontSize="14" VerticalAlignment="Center"/>
+
+                <ComboBox
+                    Grid.Column="1"
+                    Width="150"
+                    Padding="10"
+                    ItemsSource="{Binding GroupingOptions}"
+                    SelectedItem="{Binding SelectedGroupingOption}"
+                    Margin="10,0,0,0"
+                    FontSize="14">
+                </ComboBox>
+            </Grid>
+        </Grid>
+
+        <ContentControl Grid.Row="1" Content="{Binding}">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Setter Property="ContentTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <DataGrid
+                                    Grid.Row="1"
+                                    ItemsSource="{Binding Conocimientos}"
+                                    Margin="0,30,0,0"
+                                    BorderThickness="0"
+                                    Background="Transparent"
+                                    GridLinesVisibility="None"
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="False"
+                                    IsReadOnly="True"
+                                    RowHeaderWidth="0">
+
+                                    <DataGrid.ColumnHeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="Black" />
+                                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                            <Setter Property="FontWeight" Value="DemiBold"/>
+                                            <Setter Property="FontSize" Value="14"/>
+                                            <Setter Property="Height" Value="40"/>
+                                        </Style>
+                                    </DataGrid.ColumnHeaderStyle>
+
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="FontSize" Value="13"/>
+                                            <Setter Property="Height" Value="35"/>
+                                            <Setter Property="BorderBrush" Value="Transparent" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="#F2F2F2"/>
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.RowStyle>
+
+                                    <DataGrid.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="#F2F2F2"/>
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.CellStyle>
+
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
+                                        <DataGridTextColumn Header="Técnico" Binding="{Binding Tecnico.FullName}" Width="150"/>
+                                        <DataGridTextColumn Header="Dispositivos" Binding="{Binding Dispositivo.FullName}" Width="150"/>
+                                        <DataGridTemplateColumn Header="Acción" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                        <Button
+                                                            Content="🗑️"
+                                                            Command="{Binding DataContext.DeleteConocimientoCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                            CommandParameter="{Binding}"
+                                                            Padding="5"
+                                                            Background="Transparent"
+                                                            FontWeight="DemiBold"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+
+                                </DataGrid>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+
+    </Grid>
+</UserControl>
