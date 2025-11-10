@@ -133,9 +133,9 @@ namespace Data.Repositories
                                 Id = reader.GetInt32(3),
                                 Nombre = reader.GetString(4),
                                 Apellidos = reader.GetString(5),
-                                Gaveta = reader.GetInt32(6),
-                                NombrePC = reader.GetString(7),
-                                UsuarioPC = reader.GetString(8),
+                                Gaveta = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+                                NombrePC = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                UsuarioPC = reader.IsDBNull(8) ? null : reader.GetString(8),
                             },
                             Dispositivo = new Dispositivo
                             {
