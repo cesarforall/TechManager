@@ -63,6 +63,9 @@ namespace TechManager
             services.AddTransient<CreateDispositivoView>();
 
             // UI - Conocimientos
+            services.AddTransient<CreateConocimientoViewModel>();
+            services.AddTransient<CreateConocimientoView>();
+
             services.AddTransient<ConocimientoViewModel>();
             services.AddTransient<ConocimientosView>();
 

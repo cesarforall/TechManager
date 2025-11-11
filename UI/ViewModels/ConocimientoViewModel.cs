@@ -1,20 +1,26 @@
 ﻿using Core.Interfaces;
 using Core.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using UI.MVVM;
+using UI.Views;
 
 namespace UI.ViewModels
 {
     public class ConocimientoViewModel : ViewModelBase
     {
         private readonly IConocimientoService _conocimientoService;
+        private readonly IServiceProvider _serviceProvider;
         private ObservableCollection<Conocimiento> _conocimientos;
         private List<string> _groupingOptions;
         private string _selectedGroupingOption = "Todos";
 
-        public ConocimientoViewModel(IConocimientoService conocimientoService)
+        public RelayCommand OpenCreateConocimientoViewCommand => new(execute => OpenCreateConocimientoView());
+
+        public ConocimientoViewModel(IConocimientoService conocimientoService, IServiceProvider serviceProvider)
         {
             _conocimientoService = conocimientoService;
+            _serviceProvider = serviceProvider;
             _conocimientos = new();
             LoadConocimientosAsync();
             _groupingOptions = new List<string> { "Todos", "Técnicos", "Dispositivos" };
@@ -63,6 +69,12 @@ namespace UI.ViewModels
             {
                 throw;
             }
+        }
+
+        public void OpenCreateConocimientoView()
+        {
+            var createConocimientoView = _serviceProvider.GetRequiredService<CreateConocimientoView>();
+            createConocimientoView?.Show();
         }
     }
 }
