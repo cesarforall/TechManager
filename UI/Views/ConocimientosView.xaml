@@ -6,6 +6,26 @@
              xmlns:local="clr-namespace:UI.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="#F9F9F9">
+
+    <UserControl.Resources>
+        <CollectionViewSource
+            x:Key="GroupByTecnico"
+            Source="{Binding Conocimientos}">
+
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Tecnico.FullName" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource
+            x:Key="GroupByDispositivo"
+            Source="{Binding Conocimientos}">
+
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Dispositivo.FullName" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
+
     <Grid Margin="30, 60, 30, 30" Background="#F9F9F9">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -58,9 +78,11 @@
                     <Setter Property="ContentTemplate">
                         <Setter.Value>
                             <DataTemplate>
+                                <!-- Todos -->
                                 <DataGrid
                                     Grid.Row="1"
                                     ItemsSource="{Binding Conocimientos}"
+                                    Width="Auto"
                                     Margin="0,30,0,0"
                                     BorderThickness="0"
                                     Background="Transparent"
@@ -113,7 +135,7 @@
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
                                         <DataGridTextColumn Header="Técnico" Binding="{Binding Tecnico.FullName}" Width="150"/>
-                                        <DataGridTextColumn Header="Dispositivos" Binding="{Binding Dispositivo.FullName}" Width="150"/>
+                                        <DataGridTextColumn Header="Dispositivo" Binding="{Binding Dispositivo.FullName}" Width="150"/>
                                         <DataGridTemplateColumn Header="Acción" Width="*">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -130,11 +152,249 @@
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                     </DataGrid.Columns>
-
                                 </DataGrid>
                             </DataTemplate>
                         </Setter.Value>
                     </Setter>
+                    <Style.Triggers>
+                        <!-- Técnicos -->
+                        <DataTrigger Binding="{Binding SelectedGroupingOption}" Value="Técnicos">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <DataGrid
+                                            ItemsSource="{Binding Source={StaticResource GroupByTecnico}}"
+                                            Margin="0,30,0,0"
+                                            BorderThickness="0"
+                                            Background="Transparent"
+                                            GridLinesVisibility="None"
+                                            AutoGenerateColumns="False"
+                                            CanUserAddRows="False"
+                                            IsReadOnly="True"
+                                            RowHeaderWidth="0"
+                                            ClipToBounds="True">
+
+                                            <DataGrid.ColumnHeaderStyle>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="BorderBrush" Value="Black" />
+                                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                    <Setter Property="FontWeight" Value="DemiBold"/>
+                                                    <Setter Property="FontSize" Value="14"/>
+                                                    <Setter Property="Height" Value="40"/>
+                                                </Style>
+                                            </DataGrid.ColumnHeaderStyle>
+
+                                            <DataGrid.RowStyle>
+                                                <Style TargetType="DataGridRow">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="FontSize" Value="13"/>
+                                                    <Setter Property="Height" Value="35"/>
+                                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter Property="Background" Value="#F2F2F2"/>
+                                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                                            <Setter Property="Foreground" Value="Black"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGrid.RowStyle>
+
+                                            <DataGrid.CellStyle>
+                                                <Style TargetType="DataGridCell">
+                                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter Property="Background" Value="#F2F2F2"/>
+                                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                                            <Setter Property="Foreground" Value="Black"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGrid.CellStyle>
+
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
+                                                <DataGridTextColumn Header="Técnico" Binding="{Binding Tecnico.FullName}" Width="200"/>
+                                                <DataGridTextColumn Header="Dispositivo" Binding="{Binding Dispositivo.FullName}" Width="200"/>
+                                                <DataGridTemplateColumn Header="Acción" Width="*">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                                <Button Content="🗑️"
+                                                                        Command="{Binding DataContext.DeleteConocimientoCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                                        CommandParameter="{Binding}"
+                                                                        Padding="5"
+                                                                        Background="Transparent"
+                                                                        FontWeight="DemiBold"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+
+                                            <DataGrid.GroupStyle>
+                                                <GroupStyle>
+                                                    <GroupStyle.ContainerStyle>
+                                                        <Style TargetType="{x:Type GroupItem}">
+                                                            <Setter Property="Margin" Value="0"/>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                                        <Expander IsExpanded="True">
+                                                                            <Expander.Style>
+                                                                                <Style TargetType="Expander">
+                                                                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                                                                    <Setter Property="BorderBrush" Value="#ECECEC"/>
+                                                                                </Style>
+                                                                            </Expander.Style>
+                                                                            <Expander.Header>
+                                                                                <DockPanel>
+                                                                                    <TextBlock Text="{Binding Name}"
+                                                                                               Padding="5"
+                                                                                               FontSize="16"
+                                                                                               Margin="28,0,0,0"/>
+                                                                                    <TextBlock Text="{Binding ItemCount, StringFormat='({0} dispositivos)'}"
+                                                                                               Margin="5,0,0,0"
+                                                                                               VerticalAlignment="Center"/>
+                                                                                </DockPanel>
+                                                                            </Expander.Header>
+                                                                            <Expander.Content>
+                                                                                <ItemsPresenter />
+                                                                            </Expander.Content>
+                                                                        </Expander>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </GroupStyle.ContainerStyle>
+                                                </GroupStyle>
+                                            </DataGrid.GroupStyle>
+                                        </DataGrid>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <!-- Dispositivos -->
+                        <DataTrigger Binding="{Binding SelectedGroupingOption}" Value="Dispositivos">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <DataGrid ItemsSource="{Binding Source={StaticResource GroupByDispositivo}}"
+                                                  Margin="0,30,0,0"
+                                                  BorderThickness="0"
+                                                  Background="Transparent"
+                                                  GridLinesVisibility="None"
+                                                  AutoGenerateColumns="False"
+                                                  CanUserAddRows="False"
+                                                  IsReadOnly="True"
+                                                  RowHeaderWidth="0"
+                                                  ClipToBounds="True">
+
+                                            <DataGrid.ColumnHeaderStyle>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="BorderBrush" Value="Black" />
+                                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                                    <Setter Property="FontWeight" Value="DemiBold"/>
+                                                    <Setter Property="FontSize" Value="14"/>
+                                                    <Setter Property="Height" Value="40"/>
+                                                </Style>
+                                            </DataGrid.ColumnHeaderStyle>
+
+                                            <DataGrid.RowStyle>
+                                                <Style TargetType="DataGridRow">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="FontSize" Value="13"/>
+                                                    <Setter Property="Height" Value="35"/>
+                                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter Property="Background" Value="#F2F2F2"/>
+                                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                                            <Setter Property="Foreground" Value="Black"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGrid.RowStyle>
+
+                                            <DataGrid.CellStyle>
+                                                <Style TargetType="DataGridCell">
+                                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter Property="Background" Value="#F2F2F2"/>
+                                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                                            <Setter Property="Foreground" Value="Black"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGrid.CellStyle>
+
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
+                                                <DataGridTextColumn Header="Dispositivo" Binding="{Binding Dispositivo.FullName}" Width="200"/>
+                                                <DataGridTextColumn Header="Técnico" Binding="{Binding Tecnico.FullName}" Width="200"/>
+                                                <DataGridTemplateColumn Header="Acción" Width="*">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                                <Button Content="🗑️"
+                                                                        Command="{Binding DataContext.DeleteConocimientoCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                                        CommandParameter="{Binding}"
+                                                                        Padding="5"
+                                                                        Background="Transparent"
+                                                                        FontWeight="DemiBold"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+
+                                            <DataGrid.GroupStyle>
+                                                <GroupStyle>
+                                                    <GroupStyle.ContainerStyle>
+                                                        <Style TargetType="{x:Type GroupItem}">
+                                                            <Setter Property="Margin" Value="0"/>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                                        <Expander IsExpanded="True">
+                                                                            <Expander.Style>
+                                                                                <Style TargetType="Expander">
+                                                                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                                                                    <Setter Property="BorderBrush" Value="#ECECEC"/>
+                                                                                </Style>
+                                                                            </Expander.Style>
+                                                                            <Expander.Header>
+                                                                                <DockPanel>
+                                                                                    <TextBlock Text="{Binding Name}"
+                                                                                               Padding="5"
+                                                                                               FontSize="16"
+                                                                                               Margin="28,0,0,0"/>
+                                                                                    <TextBlock Text="{Binding ItemCount, StringFormat='({0} técnicos)'}"
+                                                                                               Margin="5,0,0,0"
+                                                                                               VerticalAlignment="Center"/>
+                                                                                </DockPanel>
+                                                                            </Expander.Header>
+                                                                            <Expander.Content>
+                                                                                <ItemsPresenter />
+                                                                            </Expander.Content>
+                                                                        </Expander>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </GroupStyle.ContainerStyle>
+                                                </GroupStyle>
+                                            </DataGrid.GroupStyle>
+                                        </DataGrid>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
             </ContentControl.Style>
         </ContentControl>
