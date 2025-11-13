@@ -34,7 +34,7 @@
                       Width="250"
                       Padding="8"
                       ItemsSource="{Binding Tecnicos}"
-                      SelectedItem="{Binding SelectedTecnico}"
+                      SelectedItem="{Binding SelectedTecnico, NotifyOnTargetUpdated=True}"
                       DisplayMemberPath="FullName"
                       FontSize="14"/>
 

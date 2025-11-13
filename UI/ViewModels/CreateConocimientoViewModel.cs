@@ -13,7 +13,13 @@ namespace UI.ViewModels
         private ObservableCollection<Conocimiento> _availableConocimientos = new();
         private Tecnico _selectedTecnico = new();
         private string _message = string.Empty;
-        private string _messageColor = string.Empty;
+        private string _messageColor = "black";
+
+        public RelayCommand CancelNuevoConocimientoCommand => new(execute => CancelNuevoConocimiento());
+        public RelayCommand SaveNuevoConocimientoCommand => new(async execute => await SaveNuevoConocimientoAsync());
+
+        public EventHandler? RequestClose;
+
         public CreateConocimientoViewModel(IConocimientoService conocimientoService, ITecnicoService tecnicoService)
         {
             _conocimientoService = conocimientoService;
@@ -30,7 +36,12 @@ namespace UI.ViewModels
         public Tecnico SelectedTecnico
         {
             get { return _selectedTecnico; }
-            set { _selectedTecnico = value; OnPropertyChanged(); LoadAvailableConocimientos(); }
+            set
+            {
+                _selectedTecnico = value;
+                LoadAvailableConocimientos();
+                OnPropertyChanged();
+            }
         }
 
         public ObservableCollection<Conocimiento> AvailableConocimientos
@@ -82,14 +93,16 @@ namespace UI.ViewModels
 
         public async void LoadAvailableConocimientos()
         {
+            if (SelectedTecnico == null || SelectedTecnico.Id == 0) return;
+
+            AvailableConocimientos.Clear();
+
             try
             {
                 var (succes, message, conocimientos) = await _conocimientoService.GetAvailableConocimientosByTecnicoId(SelectedTecnico.Id);
 
                 if (succes && conocimientos.Count > 0)
                 {
-                    AvailableConocimientos.Clear();
-
                     foreach (var conocimiento in conocimientos)
                     {
                         AvailableConocimientos.Add(conocimiento);
@@ -101,6 +114,40 @@ namespace UI.ViewModels
                 MessageColor = "red";
                 Message = "Error al cargar la lista de dispositivos.";
             }
+        }
+
+        public async Task SaveNuevoConocimientoAsync()
+        {
+            if (AvailableConocimientos.Count > 0)
+            {
+                try
+                {
+                    foreach (var conocimiento in AvailableConocimientos)
+                    {
+                        var (success, message, id) = await _conocimientoService.Create(conocimiento);
+
+                        if (!success) { Message = message; MessageColor = "red"; }
+                    }
+
+                    MessageColor = "black";
+                    Message = "Conocimientos asociados correctamente";
+                }
+                catch (Exception)
+                {
+                    MessageColor = "red";
+                    Message = "Error al asociar conocimientos.";
+                }
+            }
+            else
+            {
+                MessageColor = "red";
+                Message = "Sin conocimientos seleccionados.";
+            }
+        }
+
+        public void CancelNuevoConocimiento()
+        {
+            RequestClose?.Invoke(this, EventArgs.Empty);
         }
     }
 }
