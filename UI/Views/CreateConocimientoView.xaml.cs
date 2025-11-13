@@ -8,7 +8,7 @@ namespace UI.Views
     /// </summary>
     public partial class CreateConocimientoView : Window
     {
-        public CreateConocimientoView(ConocimientoViewModel viewModel)
+        public CreateConocimientoView(CreateConocimientoViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;

@@ -7,5 +7,6 @@
         public Tecnico Tecnico { get; set; } = new();
         public int DispositivoId { get; set; }
         public Dispositivo Dispositivo { get; set; } = new();
+        public bool IsChecked { get; set; } = false;
     }
 }

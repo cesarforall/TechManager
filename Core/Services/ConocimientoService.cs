@@ -6,9 +6,13 @@ namespace Core.Services
     public class ConocimientoService : IConocimientoService
     {
         private readonly IConocimientoRepository _conocimientoRepository;
-        public ConocimientoService(IConocimientoRepository conocimientoRepository)
+        private readonly IDispositivoService _dispositivoService;
+        private readonly ITecnicoService _tecnicoService;
+        public ConocimientoService(IConocimientoRepository conocimientoRepository, IDispositivoService dispositivoService, ITecnicoService tecnicoService)
         {
             _conocimientoRepository = conocimientoRepository;
+            _dispositivoService = dispositivoService;
+            _tecnicoService = tecnicoService;
         }
         public async Task<(bool success, string message, int id)> Create(Conocimiento conocimiento)
         {
@@ -57,6 +61,69 @@ namespace Core.Services
             catch (Exception)
             {
                 return (false, "Error al obtener los conocimientos.", new List<Conocimiento>());
+            }
+        }
+
+        public async Task<(bool success, string message, List<Conocimiento> conocimientos)> GetAvailableConocimientosByTecnicoId(int tecnicoId)
+        {
+            Tecnico tecnico = new();
+            List<Dispositivo> dispositivos = new();
+            List<Conocimiento> availableConocimientos = new();
+
+            try
+            {
+                var tecnicoResult = await _tecnicoService.getById(tecnicoId);
+
+                if (tecnicoResult.success && tecnicoResult.tecnico != null)
+                {
+                    tecnico = tecnicoResult.tecnico;
+
+                    var dispositivosResult = await _dispositivoService.GetAll();
+
+                    if (dispositivosResult.success && dispositivosResult.dispositivo != null)
+                    {
+                        foreach (var dispositivo in dispositivosResult.dispositivo)
+                        {
+                            dispositivos.Add(new Dispositivo
+                            {
+                                Id = dispositivo.Id,
+                                Fabricante = dispositivo.Fabricante,
+                                Modelo = dispositivo.Modelo
+                            });
+                        }
+                        var conocimientosResult = await this.GetAll();
+
+                        if (conocimientosResult.success && conocimientosResult.conocimientos.Count > 0)
+                        {
+                            var conocimientosTecnicoId = conocimientosResult.conocimientos.FindAll(conocimiento => conocimiento.TecnicoId == tecnicoId);
+
+                            foreach (var conocimiento in conocimientosTecnicoId)
+                            {
+                                dispositivos.RemoveAll(dispositivo => dispositivo.Id == conocimiento.Dispositivo.Id);
+                            }
+
+                            foreach (var dispositivo in dispositivos)
+                            {
+                                availableConocimientos.Add(new Conocimiento
+                                {
+                                    TecnicoId = tecnicoId,
+                                    DispositivoId = dispositivo.Id ?? 0,
+                                    Tecnico = tecnico,
+                                    Dispositivo = dispositivo
+                                });
+                            }
+
+                        }
+                    }
+
+                    return (true, "Lista disponible del técnico obtenida correctamente.", availableConocimientos);
+                }
+
+                return (true, $"No se ha encontrado el técnico con id {tecnicoId}.", availableConocimientos);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error al obtener los dispositivos disponibles {ex.Message}", new List<Conocimiento>());
             }
         }
     }

@@ -32,18 +32,19 @@
             <ComboBox Grid.Column="1"
                       Grid.ColumnSpan="2"
                       Width="250"
-                      Padding="10"
+                      Padding="8"
                       ItemsSource="{Binding Tecnicos}"
                       SelectedItem="{Binding SelectedTecnico}"
-                      FontSize="14">
-            </ComboBox>
+                      DisplayMemberPath="FullName"
+                      FontSize="14"/>
+
             <TextBlock Text="Dispositivos:" Grid.Row="2" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Top"/>
-            <ListBox ItemsSource="{Binding AvailableDispositivos}"
+            <ListBox ItemsSource="{Binding AvailableConocimientos}"
                      Grid.Row="2"
                      Grid.Column="1">
                 <ListBox.ItemTemplate>
                     <HierarchicalDataTemplate>
-                        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}"/>
+                        <CheckBox Content="{Binding Dispositivo.FullName}" IsChecked="{Binding IsChecked}"/>
                     </HierarchicalDataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
