@@ -2,6 +2,7 @@
 using Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
+using System.Windows;
 using UI.MVVM;
 using UI.Views;
 
@@ -16,6 +17,7 @@ namespace UI.ViewModels
         private string _selectedGroupingOption = "Todos";
 
         public RelayCommand OpenCreateConocimientoViewCommand => new(execute => OpenCreateConocimientoView());
+        public RelayCommand DeleteConocimientoCommand => new(execute => DeleteConocimiento(execute));
 
         public ConocimientoViewModel(IConocimientoService conocimientoService, IServiceProvider serviceProvider)
         {
@@ -68,6 +70,24 @@ namespace UI.ViewModels
             catch (Exception)
             {
                 throw;
+            }
+        }
+
+        public async void DeleteConocimiento(object parameter)
+        {
+            if (parameter is Conocimiento conocimiento && conocimiento.Id is int id)
+            {
+                if (MessageBox.Show($"¿Desea desasociar el conocimiento con ID: {id}?",
+                    "Eliminar conocimiento",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    var result = await _conocimientoService.Delete(id);
+                    if (result.success)
+                    {
+                        Conocimientos.Remove(conocimiento);
+                    }
+                }
             }
         }
 

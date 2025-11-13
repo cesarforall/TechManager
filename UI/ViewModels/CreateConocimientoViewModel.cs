@@ -101,6 +101,11 @@ namespace UI.ViewModels
             {
                 var (succes, message, conocimientos) = await _conocimientoService.GetAvailableConocimientosByTecnicoId(SelectedTecnico.Id);
 
+                if (succes && conocimientos.Count == 0)
+                {
+                    MessageColor = "black";
+                    Message = "El técnico ya tiene todos los dispositivos asociados.";
+                }
                 if (succes && conocimientos.Count > 0)
                 {
                     foreach (var conocimiento in conocimientos)
