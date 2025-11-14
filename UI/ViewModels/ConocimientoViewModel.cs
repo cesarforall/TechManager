@@ -22,6 +22,7 @@ namespace UI.ViewModels
         public ConocimientoViewModel(IConocimientoService conocimientoService, IServiceProvider serviceProvider)
         {
             _conocimientoService = conocimientoService;
+            _conocimientoService.ConocimientoCreated += OnConocimientoCreated;
             _serviceProvider = serviceProvider;
             _conocimientos = new();
             LoadConocimientosAsync();
@@ -95,6 +96,15 @@ namespace UI.ViewModels
         {
             var createConocimientoView = _serviceProvider.GetRequiredService<CreateConocimientoView>();
             createConocimientoView?.Show();
+        }
+
+        private async void OnConocimientoCreated(object? sender, int conocimientoId)
+        {
+            var result = await _conocimientoService.GetById(conocimientoId);
+            if (result.success)
+            {
+                _conocimientos.Add(result.conocimiento);
+            }
         }
     }
 }

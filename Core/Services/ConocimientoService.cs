@@ -8,6 +8,8 @@ namespace Core.Services
         private readonly IConocimientoRepository _conocimientoRepository;
         private readonly IDispositivoService _dispositivoService;
         private readonly ITecnicoService _tecnicoService;
+
+        public event EventHandler<int>? ConocimientoCreated;
         public ConocimientoService(IConocimientoRepository conocimientoRepository, IDispositivoService dispositivoService, ITecnicoService tecnicoService)
         {
             _conocimientoRepository = conocimientoRepository;
@@ -18,11 +20,18 @@ namespace Core.Services
         {
             try
             {
-                var result = await _conocimientoRepository.Create(conocimiento);
+                var conocimientoId = await _conocimientoRepository.Create(conocimiento);
 
-                return result > 0
-                    ? (true, "Conocimiento asignado correctamente.", result)
-                    : (false, "Error al asignar el conocimiento.", result);
+                if (conocimientoId > 0)
+                {
+                    ConocimientoCreated?.Invoke(this, conocimientoId);
+
+                    return (true, "Conocimiento asignado correctamente.", conocimientoId);
+                }
+                else
+                {
+                    return (false, "Error al asignar el conocimiento.", conocimientoId);
+                }
             }
             catch (Exception)
             {
@@ -124,6 +133,23 @@ namespace Core.Services
             catch (Exception ex)
             {
                 return (false, $"Error al obtener los dispositivos disponibles {ex.Message}", new List<Conocimiento>());
+            }
+        }
+
+        public async Task<(bool success, string message, Conocimiento conocimiento)> GetById(int id)
+        {
+            try
+            {
+                var result = await _conocimientoRepository.GetById(id);
+
+                return (result.Id > 0)
+                    ? (true, "Conocimiento obtenido correctamente.", result)
+                    : (true, $"No existe el conocimiento con ID: {id}.", result);
+
+            }
+            catch (Exception)
+            {
+                return (false, "Error al obtener los conocimientos.", new Conocimiento());
             }
         }
     }
