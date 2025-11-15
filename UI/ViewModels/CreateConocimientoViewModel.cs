@@ -93,6 +93,9 @@ namespace UI.ViewModels
 
         public async void LoadAvailableConocimientos()
         {
+            MessageColor = "black";
+            Message = string.Empty;
+
             if (SelectedTecnico == null || SelectedTecnico.Id == 0) return;
 
             AvailableConocimientos.Clear();
@@ -129,10 +132,14 @@ namespace UI.ViewModels
                 {
                     foreach (var conocimiento in AvailableConocimientos)
                     {
-                        var (success, message, id) = await _conocimientoService.Create(conocimiento);
+                        if (conocimiento.IsChecked)
+                        {
+                            var (success, message, id) = await _conocimientoService.Create(conocimiento);
 
-                        if (!success) { Message = message; MessageColor = "red"; }
+                            if (!success) { Message = message; MessageColor = "red"; }
+                        }
                     }
+                    LoadAvailableConocimientos();
 
                     MessageColor = "black";
                     Message = "Conocimientos asociados correctamente";

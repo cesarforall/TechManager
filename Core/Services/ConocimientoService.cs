@@ -108,20 +108,19 @@ namespace Core.Services
 
                             foreach (var conocimiento in conocimientosTecnicoId)
                             {
-                                dispositivos.RemoveAll(dispositivo => dispositivo.Id == conocimiento.Dispositivo.Id);
+                                dispositivos.RemoveAll(dispositivo => dispositivo.Id == conocimiento.DispositivoId);
                             }
+                        }
 
-                            foreach (var dispositivo in dispositivos)
+                        foreach (var dispositivo in dispositivos)
+                        {
+                            availableConocimientos.Add(new Conocimiento
                             {
-                                availableConocimientos.Add(new Conocimiento
-                                {
-                                    TecnicoId = tecnicoId,
-                                    DispositivoId = dispositivo.Id ?? 0,
-                                    Tecnico = tecnico,
-                                    Dispositivo = dispositivo
-                                });
-                            }
-
+                                TecnicoId = tecnicoId,
+                                DispositivoId = dispositivo.Id ?? 0,
+                                Tecnico = tecnico,
+                                Dispositivo = dispositivo
+                            });
                         }
                     }
 
