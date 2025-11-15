@@ -196,14 +196,14 @@
                                             </DataGrid.CellStyle>
 
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
-                                                <DataGridTextColumn Binding="{Binding Tecnico.FullName}" Width="200">
+                                                <DataGridTextColumn Header="Id" Binding="{Binding Id}" MinWidth="60" Width="60"/>
+                                                <DataGridTextColumn Binding="{Binding Tecnico.FullName}" MinWidth="200" Width="200">
                                                     <DataGridTextColumn.Header>
-                                                        <HeaderedContentControl>
-                                                            <Grid Width="200">
+                                                        <HeaderedContentControl Width="200">
+                                                            <Grid>
                                                                 <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="Auto"/>
                                                                     <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
                                                                 </Grid.ColumnDefinitions>
 
                                                                 <TextBlock Grid.Column="0"
@@ -222,8 +222,8 @@
                                                         </HeaderedContentControl>
                                                     </DataGridTextColumn.Header>
                                                 </DataGridTextColumn>
-                                                <DataGridTextColumn Header="Dispositivo" Binding="{Binding Dispositivo.FullName}" Width="200"/>
-                                                <DataGridTemplateColumn Header="Acción" Width="*">
+                                                <DataGridTextColumn Header="Dispositivo" Binding="{Binding Dispositivo.FullName}" MinWidth="200" Width="200"/>
+                                                <DataGridTemplateColumn Header="Acción" MinWidth="60" Width="*">
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>
                                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
@@ -247,7 +247,7 @@
                                                             <Setter Property="Template">
                                                                 <Setter.Value>
                                                                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                                        <Expander IsExpanded="True">
+                                                                        <Expander IsExpanded="False">
                                                                             <Expander.Style>
                                                                                 <Style TargetType="Expander">
                                                                                     <Setter Property="BorderThickness" Value="0,0,0,1"/>
@@ -338,14 +338,14 @@
                                             </DataGrid.CellStyle>
 
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
-                                                <DataGridTextColumn Binding="{Binding Dispositivo.FullName}" Width="200">
+                                                <DataGridTextColumn Header="Id" Binding="{Binding Id}" MinWidth="60" Width="60"/>
+                                                <DataGridTextColumn Binding="{Binding Dispositivo.FullName}" MinWidth="200" Width="200">
                                                     <DataGridTextColumn.Header>
                                                         <HeaderedContentControl>
                                                             <Grid Width="200">
                                                                 <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="Auto"/>
                                                                     <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
                                                                 </Grid.ColumnDefinitions>
 
                                                                 <TextBlock Grid.Column="0"
@@ -364,8 +364,8 @@
                                                         </HeaderedContentControl>
                                                     </DataGridTextColumn.Header>
                                                 </DataGridTextColumn>
-                                                <DataGridTextColumn Header="Técnico" Binding="{Binding Tecnico.FullName}" Width="200"/>
-                                                <DataGridTemplateColumn Header="Acción" Width="*">
+                                                <DataGridTextColumn Header="Técnico" Binding="{Binding Tecnico.FullName}" MinWidth="200" Width="200"/>
+                                                <DataGridTemplateColumn Header="Acción" MinWidth="60" Width="*">
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>
                                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
@@ -389,7 +389,7 @@
                                                             <Setter Property="Template">
                                                                 <Setter.Value>
                                                                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                                        <Expander IsExpanded="True">
+                                                                        <Expander IsExpanded="False">
                                                                             <Expander.Style>
                                                                                 <Style TargetType="Expander">
                                                                                     <Setter Property="BorderThickness" Value="0,0,0,1"/>
