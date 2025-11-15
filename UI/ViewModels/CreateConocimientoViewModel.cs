@@ -39,6 +39,7 @@ namespace UI.ViewModels
             set
             {
                 _selectedTecnico = value;
+                Message = string.Empty;
                 LoadAvailableConocimientos();
                 OnPropertyChanged();
             }
@@ -93,9 +94,6 @@ namespace UI.ViewModels
 
         public async void LoadAvailableConocimientos()
         {
-            MessageColor = "black";
-            Message = string.Empty;
-
             if (SelectedTecnico == null || SelectedTecnico.Id == 0) return;
 
             AvailableConocimientos.Clear();
@@ -128,32 +126,42 @@ namespace UI.ViewModels
         {
             if (AvailableConocimientos.Count > 0)
             {
-                try
+                if (AvailableConocimientos.Any(conocimiento => conocimiento.IsChecked))
                 {
-                    foreach (var conocimiento in AvailableConocimientos)
+                    try
                     {
-                        if (conocimiento.IsChecked)
+                        foreach (var conocimiento in AvailableConocimientos)
                         {
-                            var (success, message, id) = await _conocimientoService.Create(conocimiento);
+                            if (conocimiento.IsChecked)
+                            {
+                                var (success, message, id) = await _conocimientoService.Create(conocimiento);
 
-                            if (!success) { Message = message; MessageColor = "red"; }
+                                if (success)
+                                {
+                                    MessageColor = "black";
+                                    Message = "Conocimientos asociados correctamente";
+                                }
+                                else
+                                {
+                                    MessageColor = "red";
+                                    Message = message;
+                                }
+                            }
                         }
-                    }
-                    LoadAvailableConocimientos();
 
-                    MessageColor = "black";
-                    Message = "Conocimientos asociados correctamente";
+                        LoadAvailableConocimientos();                    
+                    }
+                    catch (Exception)
+                    {
+                        MessageColor = "red";
+                        Message = "Error al asociar conocimientos.";
+                    }                    
                 }
-                catch (Exception)
+                else
                 {
                     MessageColor = "red";
-                    Message = "Error al asociar conocimientos.";
+                    Message = "Marque los conocimientos que desee asociar.";
                 }
-            }
-            else
-            {
-                MessageColor = "red";
-                Message = "Sin conocimientos seleccionados.";
             }
         }
 
