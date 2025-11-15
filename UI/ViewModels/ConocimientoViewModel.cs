@@ -2,7 +2,9 @@
 using Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
+using System.Windows.Data;
 using UI.MVVM;
 using UI.Views;
 
@@ -15,9 +17,12 @@ namespace UI.ViewModels
         private ObservableCollection<Conocimiento> _conocimientos;
         private List<string> _groupingOptions;
         private string _selectedGroupingOption = "Todos";
+        private ICollectionView _groupedConocimientos;
+        private ListSortDirection _sortDirection = ListSortDirection.Ascending;
 
         public RelayCommand OpenCreateConocimientoViewCommand => new(execute => OpenCreateConocimientoView());
         public RelayCommand DeleteConocimientoCommand => new(execute => DeleteConocimiento(execute));
+        public RelayCommand ToggleSortCommand => new(execute => ToggleSort());
 
         public ConocimientoViewModel(IConocimientoService conocimientoService, IServiceProvider serviceProvider)
         {
@@ -44,7 +49,40 @@ namespace UI.ViewModels
         public string SelectedGroupingOption
         {
             get { return _selectedGroupingOption; }
-            set { _selectedGroupingOption = value; OnPropertyChanged(); }
+            set
+            {
+                if (_selectedGroupingOption != value)
+                {
+                    _selectedGroupingOption = value;
+                    OnPropertyChanged();
+
+                    _groupedConocimientos = null;
+                    OnPropertyChanged(nameof(GroupedConocimientos));
+                }
+            }
+        }
+
+        public ICollectionView GroupedConocimientos
+        {
+            get
+            {
+                if (_groupedConocimientos == null)
+                {
+                    _groupedConocimientos = CollectionViewSource.GetDefaultView(Conocimientos);
+                    _groupedConocimientos.GroupDescriptions.Clear();
+
+                    string? description = SelectedGroupingOption switch
+                    {
+                        "Técnicos" => "Tecnico.FullName",
+                        "Dispositivos" => "Dispositivo.FullName",
+                        _ => null
+                    };
+
+                    _groupedConocimientos.GroupDescriptions.Add(
+                        new PropertyGroupDescription(description));
+                }
+                return _groupedConocimientos;
+            }
         }
 
         public async void LoadConocimientosAsync()
@@ -66,6 +104,8 @@ namespace UI.ViewModels
                             Dispositivo = conocimiento.Dispositivo
                         });                        
                     }
+
+                    Conocimientos.OrderDescending();
                 }
             }
             catch (Exception)
@@ -105,6 +145,33 @@ namespace UI.ViewModels
             {
                 _conocimientos.Add(result.conocimiento);
             }
+        }
+        
+        private void ToggleSort()
+        {
+            string description = "Tecnicos.FullName";
+
+            switch (SelectedGroupingOption)
+            {
+                case "Técnicos":
+                    description = "Tecnico.FullName";
+                    break;
+                case "Dispositivos":
+                    description = "Dispositivo.FullName";
+                    break;
+                default:
+                    description = "Tecnico.FullName";
+                    break;
+            }
+
+            _sortDirection = _sortDirection == ListSortDirection.Ascending
+                ? ListSortDirection.Descending
+                : ListSortDirection.Ascending;
+
+            GroupedConocimientos.SortDescriptions.Clear();
+            GroupedConocimientos.SortDescriptions.Add(
+                new SortDescription(description, _sortDirection));
+            GroupedConocimientos.Refresh();
         }
     }
 }

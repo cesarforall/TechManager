@@ -7,25 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="#F9F9F9">
 
-    <UserControl.Resources>
-        <CollectionViewSource
-            x:Key="GroupByTecnico"
-            Source="{Binding Conocimientos}">
-
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Tecnico.FullName" />
-            </CollectionViewSource.GroupDescriptions>
-        </CollectionViewSource>
-        <CollectionViewSource
-            x:Key="GroupByDispositivo"
-            Source="{Binding Conocimientos}">
-
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Dispositivo.FullName" />
-            </CollectionViewSource.GroupDescriptions>
-        </CollectionViewSource>
-    </UserControl.Resources>
-
     <Grid Margin="30, 60, 30, 30" Background="#F9F9F9">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -163,7 +144,7 @@
                                 <Setter.Value>
                                     <DataTemplate>
                                         <DataGrid
-                                            ItemsSource="{Binding Source={StaticResource GroupByTecnico}}"
+                                            ItemsSource="{Binding GroupedConocimientos}"
                                             Margin="0,30,0,0"
                                             BorderThickness="0"
                                             Background="Transparent"
@@ -216,7 +197,31 @@
 
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
-                                                <DataGridTextColumn Header="Técnico" Binding="{Binding Tecnico.FullName}" Width="200"/>
+                                                <DataGridTextColumn Binding="{Binding Tecnico.FullName}" Width="200">
+                                                    <DataGridTextColumn.Header>
+                                                        <HeaderedContentControl>
+                                                            <Grid Width="200">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <TextBlock Grid.Column="0"
+                                                                           VerticalAlignment="Center"
+                                                                           Text="Técnico"/>
+
+                                                                <Button Content="↑↓"
+                                                                        Grid.Column="1"
+                                                                        HorizontalAlignment="Right"
+                                                                        Command="{Binding DataContext.ToggleSortCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                        Padding="5"
+                                                                        Margin="0,0,10,0"
+                                                                        Background="Transparent"
+                                                                        FontWeight="DemiBold"/>
+                                                            </Grid>
+                                                        </HeaderedContentControl>
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
                                                 <DataGridTextColumn Header="Dispositivo" Binding="{Binding Dispositivo.FullName}" Width="200"/>
                                                 <DataGridTemplateColumn Header="Acción" Width="*">
                                                     <DataGridTemplateColumn.CellTemplate>
@@ -281,7 +286,7 @@
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
                                     <DataTemplate>
-                                        <DataGrid ItemsSource="{Binding Source={StaticResource GroupByDispositivo}}"
+                                        <DataGrid ItemsSource="{Binding GroupedConocimientos}"
                                                   Margin="0,30,0,0"
                                                   BorderThickness="0"
                                                   Background="Transparent"
@@ -334,7 +339,31 @@
 
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
-                                                <DataGridTextColumn Header="Dispositivo" Binding="{Binding Dispositivo.FullName}" Width="200"/>
+                                                <DataGridTextColumn Binding="{Binding Dispositivo.FullName}" Width="200">
+                                                    <DataGridTextColumn.Header>
+                                                        <HeaderedContentControl>
+                                                            <Grid Width="200">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <TextBlock Grid.Column="0"
+                                                                           VerticalAlignment="Center"
+                                                                           Text="Dispositivo"/>
+
+                                                                <Button Content="↑↓"
+                                                                        Grid.Column="1"
+                                                                        HorizontalAlignment="Right"
+                                                                        Command="{Binding DataContext.ToggleSortCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                        Padding="5"
+                                                                        Margin="0,0,10,0"
+                                                                        Background="Transparent"
+                                                                        FontWeight="DemiBold"/>
+                                                            </Grid>
+                                                        </HeaderedContentControl>
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
                                                 <DataGridTextColumn Header="Técnico" Binding="{Binding Tecnico.FullName}" Width="200"/>
                                                 <DataGridTemplateColumn Header="Acción" Width="*">
                                                     <DataGridTemplateColumn.CellTemplate>
