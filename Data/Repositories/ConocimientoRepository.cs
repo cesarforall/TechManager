@@ -28,6 +28,7 @@ namespace Data.Repositories
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         tecnico_id INTEGER NOT NULL,
                         dispositivo_id INTEGER NOT NULL,
+                        UNIQUE (tecnico_id, dispositivo_id),
                         FOREIGN KEY (tecnico_id) REFERENCES tecnicos(id) ON DELETE CASCADE,
                         FOREIGN KEY (dispositivo_id) REFERENCES dispositivos(id) ON DELETE CASCADE
                     );
