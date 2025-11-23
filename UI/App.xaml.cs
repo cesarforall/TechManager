@@ -35,12 +35,14 @@ namespace TechManager
             services.AddTransient<ITecnicoRepository>(provider => new TecnicoRepository(connectionString));
             services.AddTransient<IDispositivoRepository>(provider => new DispositivoRepository(connectionString));
             services.AddTransient<IConocimientoRepository>(provider => new ConocimientoRepository(connectionString));
+            services.AddTransient<IActualizacionRepository>(provider => new ActualizacionRepository(connectionString));
 
             // Core
             // Cada vez que se solicite ITecnicoService, se creará una nueva instancia de TecnicoService
             services.AddTransient<ITecnicoService, TecnicoService>();
             services.AddTransient<IDispositivoService, DispositivoService>();
             services.AddSingleton<IConocimientoService, ConocimientoService>();
+            services.AddSingleton<IActualizacionService, ActualizacionService>();
 
             // UI
             services.AddTransient<UpdateTecnicoViewModel>();
@@ -68,6 +70,10 @@ namespace TechManager
 
             services.AddTransient<ConocimientoViewModel>();
             services.AddTransient<ConocimientosView>();
+
+            // UI - Actualizaciones
+            services.AddTransient<ActualizacionesViewModel>();
+            services.AddTransient<ActualizacionesView>();
 
             services.AddSingleton<MainWindow>();
         }
