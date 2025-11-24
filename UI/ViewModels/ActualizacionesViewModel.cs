@@ -1,24 +1,28 @@
 ﻿using Core.Interfaces;
 using Core.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using UI.MVVM;
+using UI.Views;
 
 namespace UI.ViewModels
 {
     public class ActualizacionesViewModel : ViewModelBase
     {
         private readonly IActualizacionService _actualizacionService;
+        private readonly IServiceProvider _serviceProvider;
 
         private ObservableCollection<Actualizacion> _actualizaciones = new();
         private bool _pendientesChecked = false;
 
-        public RelayCommand OpenCreateActualizacionViewCommand;
+        public RelayCommand OpenCreateActualizacionViewCommand => new(execute => OpenCreateActualizacionView());
         public RelayCommand OpenActualizacionViewCommand;
         public RelayCommand ShowActualizacionesPendientesCommand;
 
-        public ActualizacionesViewModel(IActualizacionService actualizacionService)
+        public ActualizacionesViewModel(IActualizacionService actualizacionService, IServiceProvider serviceProvider)
         {
             _actualizacionService = actualizacionService;
+            _serviceProvider = serviceProvider;
             LoadActualizacionesAsync();
         }
 
@@ -60,6 +64,12 @@ namespace UI.ViewModels
                     Actualizaciones.Add(actualizacion);
                 }
             }
+        }
+
+        public void OpenCreateActualizacionView()
+        {
+            var createActualizacionView = _serviceProvider.GetRequiredService<CreateActualizacionView>();
+            createActualizacionView?.Show();
         }
     }
 }
