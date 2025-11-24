@@ -10,6 +10,8 @@ namespace Tests.Services
         private readonly Mock<IConocimientoRepository> _mockConocimientoRepository;
         private readonly Mock<IDispositivoService> _mockDispositivoService;
         private readonly Mock<ITecnicoService> _mockTecnicoService;
+        private readonly Mock<IActualizacionService> _mockActualizacionService;
+        private readonly Mock<IVerificacionService> _mockVerificacionService;
         private readonly ConocimientoService _conocimientoService;
 
         public ConocimientoServiceTests()
@@ -17,7 +19,10 @@ namespace Tests.Services
             _mockConocimientoRepository = new Mock<IConocimientoRepository>();
             _mockDispositivoService = new Mock<IDispositivoService>();
             _mockTecnicoService = new Mock<ITecnicoService>();
-            _conocimientoService = new ConocimientoService(_mockConocimientoRepository.Object, _mockDispositivoService.Object, _mockTecnicoService.Object);
+            _mockActualizacionService = new Mock<IActualizacionService>();
+            _mockVerificacionService = new Mock<IVerificacionService>();
+            _conocimientoService = new ConocimientoService(
+                _mockConocimientoRepository.Object, _mockDispositivoService.Object, _mockTecnicoService.Object, _mockActualizacionService.Object, _mockVerificacionService.Object);
         }
 
         [Fact]
@@ -56,7 +61,16 @@ namespace Tests.Services
                 Dispositivo = new Dispositivo { Id = 1, Fabricante = "Fabricante 1", Modelo = "Modelo 1" }
             };
 
-            _mockConocimientoRepository.Setup(repository => repository.Create(conocimiento)).ReturnsAsync(1);
+            var actualizaciones = new List<Actualizacion>
+            {
+                new Actualizacion { Id = 1, DispositivoId = 1, Version = "1.0.0", Fecha = "2025-01-15 09:00:00" }
+            };
+
+            _mockConocimientoRepository.Setup(r => r.Create(conocimiento)).ReturnsAsync(1);
+            _mockActualizacionService.Setup(s => s.GetByDispositivoId(1))
+                .ReturnsAsync((true, "Actualizaciones obtenidas correctamente.", actualizaciones));
+            _mockVerificacionService.Setup(s => s.Create(It.IsAny<Verificacion>()))
+                .ReturnsAsync((true, "Verificación asignada correctamente.", 1));
 
             //Act
             var (success, message, id) = await _conocimientoService.Create(conocimiento);
@@ -65,6 +79,11 @@ namespace Tests.Services
             Assert.True(success);
             Assert.Contains("Conocimiento asignado correctamente.", message);
             Assert.Equal(1, id);
+
+            // Verificar que se creó la verificación
+            _mockVerificacionService.Verify(s => s.Create(It.Is<Verificacion>(
+                v => v.ActualizacionId == 1 && v.TecnicoId == 1 && v.Confirmado == 0
+            )), Times.Once);
         }
 
         [Fact]

@@ -8,13 +8,23 @@ namespace Core.Services
         private readonly IConocimientoRepository _conocimientoRepository;
         private readonly IDispositivoService _dispositivoService;
         private readonly ITecnicoService _tecnicoService;
+        private readonly IActualizacionService _actualizacionService;
+        private readonly IVerificacionService _verificacionService;
 
         public event EventHandler<int>? ConocimientoCreated;
-        public ConocimientoService(IConocimientoRepository conocimientoRepository, IDispositivoService dispositivoService, ITecnicoService tecnicoService)
+        public ConocimientoService(
+            IConocimientoRepository conocimientoRepository,
+            IDispositivoService dispositivoService,
+            ITecnicoService tecnicoService,
+            IActualizacionService actualizacionService,
+            IVerificacionService verificacionService
+            )
         {
             _conocimientoRepository = conocimientoRepository;
             _dispositivoService = dispositivoService;
             _tecnicoService = tecnicoService;
+            _actualizacionService = actualizacionService;
+            _verificacionService = verificacionService;
         }
         public async Task<(bool success, string message, int id)> Create(Conocimiento conocimiento)
         {
@@ -24,8 +34,24 @@ namespace Core.Services
 
                 if (conocimientoId > 0)
                 {
-                    ConocimientoCreated?.Invoke(this, conocimientoId);
+                    var actualizaciones = await _actualizacionService.GetByDispositivoId(conocimiento.DispositivoId);
 
+                    if (actualizaciones.actualizaciones.Any())
+                    {
+                        var ultimaActualizacion = actualizaciones.actualizaciones.OrderByDescending(a => a.Fecha).First();
+
+                        var verificacion = new Verificacion
+                        {
+                            ActualizacionId = ultimaActualizacion.Id,
+                            TecnicoId = conocimiento.TecnicoId,
+                            Confirmado = 0,
+                            FechaConfirmacion = string.Empty
+                        };
+
+                        await _verificacionService.Create(verificacion);
+                    }
+
+                    ConocimientoCreated?.Invoke(this, conocimientoId);
                     return (true, "Conocimiento asignado correctamente.", conocimientoId);
                 }
                 else
