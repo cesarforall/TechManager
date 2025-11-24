@@ -151,5 +151,26 @@ namespace Core.Services
                 return (false, "Error al obtener los conocimientos.", new Conocimiento());
             }
         }
+
+        public async Task<(bool success, string message, List<Conocimiento> conocimientos)> GetByDispositivoId(int dispositivoId)
+        {
+            if (dispositivoId <= 0)
+            {
+                return (false, "ID de dispositivo inválido.", new List<Conocimiento>());
+            }
+
+            try
+            {
+                var result = await _conocimientoRepository.GetByDispositivoId(dispositivoId);
+
+                return (result.Count > 0)
+                    ? (true, "Conocimientos obtenidos correctamente.", result)
+                    : (true, $"No existen conocimientos para el dispositivo con ID: {dispositivoId}.", result);
+            }
+            catch (Exception)
+            {
+                return (false, "Error al obtener los conocimientos por dispositivo.", new List<Conocimiento>());
+            }
+        }
     }
 }

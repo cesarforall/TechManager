@@ -8,5 +8,6 @@ namespace Core.Interfaces
         Task<Conocimiento> GetById(int id);
         Task<bool> Delete(int id);
         Task<int> Create(Conocimiento conocimiento);
+        Task<List<Conocimiento>> GetByDispositivoId(int dispositivoId);
     }
 }

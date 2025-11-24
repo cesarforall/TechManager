@@ -158,6 +158,31 @@ namespace Tests.Repositories
             Assert.Equal("Modelo 2", result[1].Dispositivo.Modelo);
         }
 
+        [Fact]
+        public async Task GetByDispositivoIdSuccess()
+        {
+            //Arrange
+            using var command = _connection.CreateCommand();
+            command.CommandText = """
+                INSERT INTO tecnicos (nombre, apellidos, gaveta, nombre_pc, usuario_pc) VALUES ('Juan', 'García', 1, 'Juan-PC', 'juan');
+                INSERT INTO tecnicos (nombre, apellidos, gaveta, nombre_pc, usuario_pc) VALUES ('Pedro', 'López', 2, 'Pedro-PC', 'pedro');
+                INSERT INTO dispositivos (fabricante, modelo) VALUES ('Fabricante 1', 'Modelo 1');
+                INSERT INTO conocimientos (tecnico_id, dispositivo_id) VALUES (1, 1);
+                INSERT INTO conocimientos (tecnico_id, dispositivo_id) VALUES (2, 1);
+                """;
+            command.ExecuteNonQuery();
+
+            //Act
+            var result = await _conocimientoRepository.GetByDispositivoId(1);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count);
+            Assert.All(result, c => Assert.Equal(1, c.DispositivoId));
+            Assert.Equal(1, result[0].TecnicoId);
+            Assert.Equal(2, result[1].TecnicoId);
+        }
+
         public void Dispose()
         {
             _connection?.Close();

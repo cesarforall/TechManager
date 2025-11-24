@@ -10,5 +10,6 @@ namespace Core.Interfaces
         Task<(bool success, string message)> Delete(int id);
         Task<(bool success, string message, int id)> Create(Conocimiento conocimiento);
         Task<(bool success, string message, List<Conocimiento> conocimientos)> GetAvailableConocimientosByTecnicoId(int tecnicoId);
+        Task<(bool success, string message, List<Conocimiento> conocimientos)> GetByDispositivoId(int dispositivoId);
     }
 }

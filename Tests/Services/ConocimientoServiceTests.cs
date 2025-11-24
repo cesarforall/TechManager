@@ -188,5 +188,66 @@ namespace Tests.Services
             Assert.Contains("Error al obtener", message);
             Assert.Empty(conocimientosList);
         }
+
+        [Fact]
+        public async Task GetConocimientosByDispositivoIdSuccess()
+        {
+            //Arrange
+            var conocimientos = new List<Conocimiento>
+            {
+                new Conocimiento
+                {
+                    Id = 1,
+                    TecnicoId = 1,
+                    DispositivoId = 1,
+                    Tecnico = new Tecnico { Id = 1, Nombre = "Juan", Apellidos = "García" },
+                    Dispositivo = new Dispositivo { Id = 1, Fabricante = "Fabricante 1", Modelo = "Modelo 1" }
+                },
+                new Conocimiento
+                {
+                    Id = 2,
+                    TecnicoId = 2,
+                    DispositivoId = 1,
+                    Tecnico = new Tecnico { Id = 2, Nombre = "Pedro", Apellidos = "López" },
+                    Dispositivo = new Dispositivo { Id = 1, Fabricante = "Fabricante 1", Modelo = "Modelo 1" }
+                }
+            };
+            _mockConocimientoRepository.Setup(repository => repository.GetByDispositivoId(1)).ReturnsAsync(conocimientos);
+
+            //Act
+            var (success, message, conocimientosList) = await _conocimientoService.GetByDispositivoId(1);
+
+            //Assert
+            Assert.True(success);
+            Assert.Contains("Conocimientos obtenidos correctamente.", message);
+            Assert.Equal(2, conocimientosList.Count);
+        }
+
+        [Fact]
+        public async Task GetConocimientosByDispositivoIdInvalidIdFails()
+        {
+            //Act
+            var (success, message, conocimientosList) = await _conocimientoService.GetByDispositivoId(0);
+
+            //Assert
+            Assert.False(success);
+            Assert.Contains("ID de dispositivo inválido.", message);
+            Assert.Empty(conocimientosList);
+        }
+
+        [Fact]
+        public async Task GetConocimientosByDispositivoIdEmptySuccess()
+        {
+            //Arrange
+            _mockConocimientoRepository.Setup(repository => repository.GetByDispositivoId(999)).ReturnsAsync(new List<Conocimiento>());
+
+            //Act
+            var (success, message, conocimientosList) = await _conocimientoService.GetByDispositivoId(999);
+
+            //Assert
+            Assert.True(success);
+            Assert.Contains("No existen conocimientos para el dispositivo con ID: 999.", message);
+            Assert.Empty(conocimientosList);
+        }
     }
 }

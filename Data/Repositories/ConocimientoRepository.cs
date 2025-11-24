@@ -221,5 +221,73 @@ namespace Data.Repositories
                 throw new RepositoryException("Error al obtener el conocimiento en la base de datos.");
             }
         }
+
+        public async Task<List<Conocimiento>> GetByDispositivoId(int dispositivoId)
+        {
+            List<Conocimiento> conocimientos = new List<Conocimiento>();
+
+            try
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                await connection.OpenAsync();
+
+                using var command = connection.CreateCommand();
+                command.CommandText = """
+                    SELECT
+                        c.id AS conocimiento_id,
+                        c.tecnico_id AS conocimiento_tecnico_id,
+                        c.dispositivo_id AS conocimiento_dispositivo_id,
+                        t.id AS tecnico_id,
+                        t.nombre,
+                        t.apellidos,
+                        t.gaveta,
+                        t.nombre_pc,
+                        t.usuario_pc,
+                        d.id AS dispositivo_id,
+                        d.fabricante,
+                        d.modelo
+                    FROM conocimientos c
+                    LEFT JOIN tecnicos t ON c.tecnico_id = t.id
+                    LEFT JOIN dispositivos d ON c.dispositivo_id = d.id
+                    WHERE c.dispositivo_id = $dispositivo_id;
+                    """;
+                command.Parameters.AddWithValue("$dispositivo_id", dispositivoId);
+
+                using var reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    conocimientos.Add(
+                        new Conocimiento
+                        {
+                            Id = reader.GetInt32(0),
+                            TecnicoId = reader.GetInt32(1),
+                            DispositivoId = reader.GetInt32(2),
+                            Tecnico = new Tecnico
+                            {
+                                Id = reader.GetInt32(3),
+                                Nombre = reader.GetString(4),
+                                Apellidos = reader.GetString(5),
+                                Gaveta = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+                                NombrePC = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                UsuarioPC = reader.IsDBNull(8) ? null : reader.GetString(8),
+                            },
+                            Dispositivo = new Dispositivo
+                            {
+                                Id = reader.GetInt32(9),
+                                Fabricante = reader.GetString(10),
+                                Modelo = reader.GetString(11)
+                            }
+                        }
+                    );
+                }
+
+                return conocimientos;
+            }
+            catch (Exception)
+            {
+                throw new RepositoryException("Error al obtener los conocimientos por dispositivo en la base de datos.");
+            }
+        }
     }
 }
