@@ -102,7 +102,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                 <Button Content="📝"
-                                        Command="{Binding DataContext.OpenActualizacionViewCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        Command="{Binding DataContext.OpenVerificacionListViewCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"
                                         Padding="5"
                                         Background="Transparent"

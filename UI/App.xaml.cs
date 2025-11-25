@@ -74,6 +74,9 @@ namespace TechManager
             services.AddTransient<ConocimientosView>();
 
             // UI - Actualizaciones
+            services.AddTransient<VerificacionesListViewModel>();
+            services.AddTransient<VerificacionesListView>();
+
             services.AddTransient<CreateActualizacionViewModel>();
             services.AddTransient<CreateActualizacionView>();
 

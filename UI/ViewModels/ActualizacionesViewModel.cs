@@ -16,7 +16,7 @@ namespace UI.ViewModels
         private bool _pendientesChecked = false;
 
         public RelayCommand OpenCreateActualizacionViewCommand => new(execute => OpenCreateActualizacionView());
-        public RelayCommand OpenActualizacionViewCommand;
+        public RelayCommand OpenVerificacionListViewCommand => new(execute => OpenVerificacionListView(execute));
         public RelayCommand ShowActualizacionesPendientesCommand;
 
         public ActualizacionesViewModel(IActualizacionService actualizacionService, IServiceProvider serviceProvider)
@@ -70,6 +70,17 @@ namespace UI.ViewModels
         {
             var createActualizacionView = _serviceProvider.GetRequiredService<CreateActualizacionView>();
             createActualizacionView?.Show();
+        }
+
+        private void OpenVerificacionListView(object parameter)
+        {
+            if (parameter is Actualizacion actualizacion)
+            {
+                var verificacionListView = _serviceProvider.GetRequiredService<VerificacionesListView>();
+                var verificacionListViewModel = verificacionListView.DataContext as VerificacionesListViewModel;
+                verificacionListViewModel?.Initialize(actualizacion);
+                verificacionListView.Show();
+            }
         }
     }
 }
