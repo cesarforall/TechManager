@@ -25,7 +25,6 @@
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="45"/>
                 <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
 
             <TextBlock Text="Dispositivo:" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
@@ -44,14 +43,6 @@
 
             <TextBlock Text="Descripción:" Grid.Row="2" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
             <TextBox Text="{Binding Descripcion}" Grid.Row="2" Grid.Column="1" Width="200" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
-
-            <TextBlock Text="Fecha:" Grid.Row="3" Grid.Column="0" FontSize="14" FontWeight="DemiBold" VerticalAlignment="Center"/>
-            <DatePicker Grid.Row="3"
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        SelectedDateFormat="Long"
-                        SelectedDate="{Binding CurrentDate}"
-                        FirstDayOfWeek="Monday"/>
         </Grid>
 
         <TextBlock Grid.Row="2" Text="{Binding Message}" Foreground="{Binding MessageColor}" FontSize="14" Margin="0,30"/>

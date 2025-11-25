@@ -15,7 +15,6 @@ namespace UI.ViewModels
         private Dispositivo _selectedDispositivo = new();
         private string _version = string.Empty;
         private string _descripcion = string.Empty;
-        private DateTime? _currentDate;
         private string _message = string.Empty;
         private string _messageColor = "black";
 
@@ -35,7 +34,6 @@ namespace UI.ViewModels
             _dispositivoService = dispositivoService;
             _conocimientoService = conocimientoService;
             _verificacionService = verificacionService;
-            CurrentDate = DateTime.Today;
             LoadDispositivosAsync();
         }
 
@@ -66,12 +64,6 @@ namespace UI.ViewModels
         {
             get { return _descripcion; }
             set { _descripcion = value; OnPropertyChanged(); }
-        }
-
-        public DateTime? CurrentDate
-        {
-            get { return _currentDate; }
-            set { _currentDate = value; OnPropertyChanged(); }
         }
 
         public string Message
@@ -135,13 +127,6 @@ namespace UI.ViewModels
                 return;
             }
 
-            if (CurrentDate == null)
-            {
-                MessageColor = "red";
-                Message = "Seleccione una fecha.";
-                return;
-            }
-
             try
             {
                 var actualizacion = new Actualizacion
@@ -149,7 +134,7 @@ namespace UI.ViewModels
                     DispositivoId = SelectedDispositivo.Id ?? 0,
                     Version = Version,
                     Descripcion = Descripcion,
-                    Fecha = CurrentDate.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                    Fecha = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
 
                 var (success, message, id) = await _actualizacionService.Create(actualizacion);
