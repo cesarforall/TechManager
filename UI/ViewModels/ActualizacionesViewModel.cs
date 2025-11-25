@@ -22,6 +22,7 @@ namespace UI.ViewModels
         public ActualizacionesViewModel(IActualizacionService actualizacionService, IServiceProvider serviceProvider)
         {
             _actualizacionService = actualizacionService;
+            _actualizacionService.ActualizacionCreated += OnActualizacionCreated;
             _serviceProvider = serviceProvider;
             LoadActualizacionesAsync();
         }
@@ -80,6 +81,16 @@ namespace UI.ViewModels
                 var verificacionListViewModel = verificacionListView.DataContext as VerificacionesListViewModel;
                 verificacionListViewModel?.Initialize(actualizacion);
                 verificacionListView.Show();
+            }
+        }
+
+        private async void OnActualizacionCreated(object? sender, int actualizacionId)
+        {
+            var result = await _actualizacionService.GetById(actualizacionId);
+            if (result.success && result.actualizacion != null)
+            {
+                _actualizaciones.Add(result.actualizacion);
+                OnPropertyChanged(nameof(DisplayedActualizaciones));
             }
         }
     }
