@@ -12,6 +12,7 @@ namespace UI.Views
         {
             InitializeComponent();
             DataContext = createActualizacionViewModel;
+            createActualizacionViewModel.RequestClose += (s, e) => this.Close();
         }
     }
 }

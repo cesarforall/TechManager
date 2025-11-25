@@ -176,7 +176,6 @@ namespace UI.ViewModels
 
                     MessageColor = "black";
                     Message = "Actualización creada correctamente.";
-                    RequestClose?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
