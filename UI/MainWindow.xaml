@@ -13,48 +13,64 @@
         </Grid.ColumnDefinitions>
 
         <Border BorderBrush="Black" BorderThickness="0,0,2,0">
-            <StackPanel Background="#F2F2F2">
-                <TextBlock
-                    Text="Tech Manager"
-                    FontSize="28"
-                    FontWeight="DemiBold"
-                    HorizontalAlignment="Stretch"
-                    TextAlignment="Center"
-                    Margin="0,60,0,0"/>
+            <Grid  Background="#F2F2F2">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 
-                <Button
-                    Click="OpenTecnicosView"
-                    Content="Técnicos" FontSize="24"
-                    HorizontalAlignment="Stretch"
-                    Background="Transparent"
-                    BorderThickness="0" Margin="0,40,0,0"
-                    Padding="10"/>
+                <StackPanel>
+                    <TextBlock
+                        Text="Tech Manager"
+                        FontSize="28"
+                        FontWeight="DemiBold"
+                        HorizontalAlignment="Stretch"
+                        TextAlignment="Center"
+                        Margin="0,60,0,0"/>
+
+                    <Button
+                        Click="OpenTecnicosView"
+                        Content="Técnicos" FontSize="24"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0" Margin="0,40,0,0"
+                        Padding="10"/>
+
+                    <Button
+                        Click="OpenDispositivosView"
+                        Content="Dispositivos" FontSize="24"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="10"/>
+
+                    <Button
+                        Click="OpenConocimientosView"
+                        Content="Conocimientos" FontSize="24"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="10"/>
+
+                    <Button
+                        Click="OpenActualizacionesView"
+                        Content="Actualizaciones" FontSize="24"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="10"/>
+
+
+                </StackPanel>
                 
-                <Button
-                    Click="OpenDispositivosView"
-                    Content="Dispositivos" FontSize="24"
-                    HorizontalAlignment="Stretch"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Padding="10"/>
-
-                <Button
-                    Click="OpenConocimientosView"
-                    Content="Conocimientos" FontSize="24"
-                    HorizontalAlignment="Stretch"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Padding="10"/>
-
-                <Button
-                    Click="OpenActualizacionesView"
-                    Content="Actualizaciones" FontSize="24"
-                    HorizontalAlignment="Stretch"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Padding="10"/>
-
-            </StackPanel>
+                <Button Grid.Row="1"
+                        Content="ℹ️ Acerca de" FontSize="14"
+                        Click="ShowAbout"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="10"/>
+            </Grid>
         </Border>
 
         <ContentControl x:Name="MainContainer" Grid.Column="1"/>

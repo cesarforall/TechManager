@@ -12,6 +12,7 @@ namespace TechManager
     public partial class MainWindow : Window
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly string _version;
 
         public MainWindow(IServiceProvider serviceProvicer)
         {
@@ -19,9 +20,8 @@ namespace TechManager
             InitializeComponent();
 
             // Lee la versión dentro de csproj
-            var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
-            var cleanVersion = fullVersion.Split('+')[0];
-            Title = $"TechManager v{cleanVersion}";
+            _version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion.Split('+')[0];
+            Title = $"TechManager v{_version}";
         }
 
         private void OpenTecnicosView(object sender, RoutedEventArgs e)
@@ -42,6 +42,20 @@ namespace TechManager
         private void OpenActualizacionesView(object sender, RoutedEventArgs e)
         {
             MainContainer.Content = _serviceProvider.GetRequiredService<ActualizacionesView>();
+        }
+
+        private void ShowAbout(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(
+                $"TechManager v{_version}\n\n"
+                + "Sistema de gestión de conocimientos técnicos y actualizaciones de dispositivos para laboratorios de reparación\n\n"
+                + "Desarrollado por: César Almeida\n"
+                + "Proyecto final DAM 2024/2025\n\n"
+                + "📁 GitHub: https://github.com/cesarforall/TechManager",
+                "Acerca de TechManager",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information
+                );
         }
     }
 }
