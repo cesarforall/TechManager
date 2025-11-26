@@ -22,6 +22,8 @@ namespace UI.ViewModels
         public TecnicosViewModel(ITecnicoService tecnicoService, IServiceProvider serviceProvider)
         {
             _tecnicoService = tecnicoService;
+            _tecnicoService.TecnicoCreated += OnTecnicoCreated;
+            _tecnicoService.TecnicoUpdated += OnTecnicoUpdated;
             _serviceProvider = serviceProvider;
             _tecnicos = new ObservableCollection<Tecnico>();
             InitializeAsync();
@@ -84,6 +86,30 @@ namespace UI.ViewModels
                 var updateTecnicoViewModel = updateTecnicoView.DataContext as UpdateTecnicoViewModel;
                 updateTecnicoViewModel.Initialize(tecnico);
                 updateTecnicoView.Show();
+            }
+        }
+
+        private async void OnTecnicoCreated(object? sender, int tecnicoId)
+        {
+            var result = await _tecnicoService.getById(tecnicoId);
+            if (result.success && result.tecnico != null)
+            {
+                Tecnicos.Add(result.tecnico);
+            }
+        }
+
+        private async void OnTecnicoUpdated(object? sender, int tecnicoId)
+        {
+            var result = await _tecnicoService.getById(tecnicoId);
+            if (result.success && result.tecnico != null)
+            {
+                var existingTecnico = Tecnicos.FirstOrDefault(t => t.Id == tecnicoId);
+                if (existingTecnico != null)
+                {
+                    var index = Tecnicos.IndexOf(existingTecnico);
+                    Tecnicos.RemoveAt(index);
+                    Tecnicos.Insert(index, result.tecnico);
+                }
             }
         }
     }

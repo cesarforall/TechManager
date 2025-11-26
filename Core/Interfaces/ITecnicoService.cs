@@ -4,6 +4,8 @@ namespace Core.Interfaces
 {
     public interface ITecnicoService
     {
+        event EventHandler<int>? TecnicoCreated;
+        event EventHandler<int>? TecnicoUpdated;
         Task<(bool success, string message, int id)> create(Tecnico tecnico);
         Task<(bool success, string message)> delete(int id);
         Task<(bool success, string message, List<Tecnico>? tecnicos)> getAll();

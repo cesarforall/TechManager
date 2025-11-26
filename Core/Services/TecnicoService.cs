@@ -7,6 +7,9 @@ namespace Core.Services
     {
         private readonly ITecnicoRepository _tecnicoRepository;
 
+        public event EventHandler<int>? TecnicoCreated;
+        public event EventHandler<int>? TecnicoUpdated;
+
         public TecnicoService(ITecnicoRepository tecnicoRepository)
         {
             _tecnicoRepository = tecnicoRepository;
@@ -59,6 +62,12 @@ namespace Core.Services
             try
             {
                 int id = await _tecnicoRepository.create(tecnico);
+
+                if (id > 0)
+                {
+                    TecnicoCreated?.Invoke(this, id);
+                }
+
                 return (true, $"Técnico creado correctamente con ID {id}.", id);
             }
             catch (Exception)
@@ -197,6 +206,7 @@ namespace Core.Services
                 var result = await _tecnicoRepository.update(tecnico);
                 if (result)
                 {
+                    TecnicoUpdated?.Invoke(this, tecnico.Id);
                     return (true, "Técnico actualizado correctamente.");
                 }
                 else
