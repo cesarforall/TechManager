@@ -94,8 +94,6 @@
                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
                 <DataGridTextColumn Header="Dispositivo" Binding="{Binding Dispositivo.FullName}" Width="150"/>
                 <DataGridTextColumn Header="Versión" Binding="{Binding Version}" Width="100"/>
-                <DataGridTextColumn Header="Descripción" Binding="{Binding Descripcion}" Width="300"/>
-                <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha, StringFormat='{}{0:dd/MM/yyyy}'}" Width="150"/>
                 <DataGridTextColumn Header="Pendientes" Binding="{Binding Pendientes, StringFormat='{}{0} técnicos' }" Width="100"/>
                 <DataGridTemplateColumn Header="Acción" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
@@ -111,6 +109,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Descripción" Binding="{Binding Descripcion}" Width="300"/>
+                <DataGridTextColumn Header="Fecha" Binding="{Binding Fecha}" Width="150"/>
             </DataGrid.Columns>
         </DataGrid>
 
