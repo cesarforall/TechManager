@@ -10,6 +10,7 @@ namespace UI.ViewModels
     public class ActualizacionesViewModel : ViewModelBase
     {
         private readonly IActualizacionService _actualizacionService;
+        private readonly IVerificacionService _verificacionService;
         private readonly IServiceProvider _serviceProvider;
 
         private ObservableCollection<Actualizacion> _actualizaciones = new();
@@ -19,10 +20,12 @@ namespace UI.ViewModels
         public RelayCommand OpenVerificacionListViewCommand => new(execute => OpenVerificacionListView(execute));
         public RelayCommand ShowActualizacionesPendientesCommand;
 
-        public ActualizacionesViewModel(IActualizacionService actualizacionService, IServiceProvider serviceProvider)
+        public ActualizacionesViewModel(IActualizacionService actualizacionService, IVerificacionService verificacionService, IServiceProvider serviceProvider)
         {
             _actualizacionService = actualizacionService;
             _actualizacionService.ActualizacionCreated += OnActualizacionCreated;
+            _verificacionService = verificacionService;
+            _verificacionService.VerificacionConfirmed += OnVerificacionConfirmed;
             _serviceProvider = serviceProvider;
             LoadActualizacionesAsync();
         }
@@ -91,6 +94,25 @@ namespace UI.ViewModels
             {
                 _actualizaciones.Add(result.actualizacion);
                 OnPropertyChanged(nameof(DisplayedActualizaciones));
+            }
+        }
+
+        private async void OnVerificacionConfirmed(object? sender, int actualizacionId)
+        {
+            var result = await _actualizacionService.GetById(actualizacionId);
+            if (result.success && result.actualizacion != null)
+            {
+                var existingActualizacion = Actualizaciones.FirstOrDefault(a => a.Id == actualizacionId);
+                if (existingActualizacion != null)
+                {
+                    var index = Actualizaciones.IndexOf(existingActualizacion);
+
+                    Actualizaciones.RemoveAt(index);
+                    Actualizaciones.Insert(index, result.actualizacion);
+
+                    OnPropertyChanged(nameof(Actualizaciones));
+                    OnPropertyChanged(nameof(DisplayedActualizaciones));
+                }
             }
         }
     }

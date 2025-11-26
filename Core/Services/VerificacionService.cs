@@ -8,6 +8,7 @@ namespace Core.Services
         private readonly IVerificacionRepository _verificacionRepository;
 
         public event EventHandler<int>? VerificacionCreated;
+        public event EventHandler<int>? VerificacionConfirmed;
 
         public VerificacionService(IVerificacionRepository verificacionRepository)
         {
@@ -68,9 +69,15 @@ namespace Core.Services
                 var fechaConfirmacion = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 var result = await _verificacionRepository.ConfirmVerification(actualizacionId, tecnicoId, fechaConfirmacion);
 
-                return result
-                    ? (true, "Verificación confirmada correctamente.")
-                    : (false, $"No se encontró la verificación para actualización {actualizacionId} y técnico {tecnicoId}.");
+                if (result)
+                {
+                    VerificacionConfirmed?.Invoke(this, actualizacionId);
+                    return (true, "Verificación confirmada correctamente.");
+                }
+                else
+                {
+                    return (false, $"No se encontró la verificación para actualización {actualizacionId} y técnico {tecnicoId}.");
+                }
             }
             catch (Exception)
             {

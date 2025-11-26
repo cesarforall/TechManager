@@ -4,6 +4,7 @@ namespace Core.Interfaces
 {
     public interface IVerificacionService
     {
+        event EventHandler<int>? VerificacionConfirmed;
         Task<(bool success, string message, int id)> Create(Verificacion verificacion);
         Task<(bool success, string message)> ConfirmVerification(int actualizacionId, int tecnicoId);
         Task<(bool success, string message, List<Verificacion> verificaciones)> GetAll();
