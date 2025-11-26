@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TechManager"
         mc:Ignorable="d"
-        Title="TechManager v1.0.0" Height="720" Width="1280" WindowStartupLocation="CenterScreen">
+        Title="{Binding Title}" Height="720" Width="1280" WindowStartupLocation="CenterScreen">
     <Grid Background="#F9F9F9">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -29,7 +29,7 @@
                         Margin="0,60,0,0"/>
 
                     <Button
-                        Click="OpenTecnicosView"
+                        Command="{Binding OpenTecnicosViewCommand}"
                         Content="Técnicos" FontSize="24"
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
@@ -37,7 +37,7 @@
                         Padding="10"/>
 
                     <Button
-                        Click="OpenDispositivosView"
+                        Command="{Binding OpenDispositivosViewCommand}"
                         Content="Dispositivos" FontSize="24"
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
@@ -45,7 +45,7 @@
                         Padding="10"/>
 
                     <Button
-                        Click="OpenConocimientosView"
+                        Command="{Binding OpenConocimientosViewCommand}"
                         Content="Conocimientos" FontSize="24"
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
@@ -53,7 +53,7 @@
                         Padding="10"/>
 
                     <Button
-                        Click="OpenActualizacionesView"
+                        Command="{Binding OpenActualizacionesViewCommand}"
                         Content="Actualizaciones" FontSize="24"
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
@@ -65,7 +65,7 @@
                 
                 <Button Grid.Row="1"
                         Content="ℹ️ Acerca de" FontSize="14"
-                        Click="ShowAbout"
+                        Command="{Binding ShowAboutCommand}"
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
                         BorderThickness="0"
@@ -73,6 +73,6 @@
             </Grid>
         </Border>
 
-        <ContentControl x:Name="MainContainer" Grid.Column="1"/>
+        <ContentControl Content="{Binding CurrentView}" Grid.Column="1"/>
     </Grid>
 </Window>

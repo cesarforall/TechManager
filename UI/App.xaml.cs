@@ -83,6 +83,8 @@ namespace TechManager
             services.AddTransient<ActualizacionesViewModel>();
             services.AddTransient<ActualizacionesView>();
 
+            // MainWindow
+            services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<MainWindow>();
         }
     }
