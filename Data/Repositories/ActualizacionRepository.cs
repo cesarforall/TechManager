@@ -118,10 +118,13 @@ namespace Data.Repositories
                         a.fecha,
                         d.id as dispositivo_id,
                         d.fabricante,
-                        d.modelo
+                        d.modelo,
+                        COUNT(CASE WHEN v.confirmado = 0 THEN 1 END) as pendientes
                     FROM actualizaciones a
                     INNER JOIN dispositivos d ON a.dispositivo_id = d.id
-                    WHERE a.id = $id;
+                    LEFT JOIN verificaciones v ON a.id = v.actualizacion_id
+                    WHERE a.id = $id
+                    GROUP BY a.id;
                     """;
                 command.Parameters.AddWithValue("$id", id);
 
@@ -141,7 +144,8 @@ namespace Data.Repositories
                             Id = reader.GetInt32(5),
                             Fabricante = reader.GetString(6),
                             Modelo = reader.GetString(7)
-                        }
+                        },
+                        Pendientes = reader.GetInt32(8)
                     };
                 }
                 else
