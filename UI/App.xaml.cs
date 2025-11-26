@@ -41,7 +41,7 @@ namespace TechManager
             // Core
             // Cada vez que se solicite ITecnicoService, se creará una nueva instancia de TecnicoService
             services.AddTransient<ITecnicoService, TecnicoService>();
-            services.AddTransient<IDispositivoService, DispositivoService>();
+            services.AddSingleton<IDispositivoService, DispositivoService>();
             services.AddSingleton<IConocimientoService, ConocimientoService>();
             services.AddSingleton<IActualizacionService, ActualizacionService>();
             services.AddSingleton<IVerificacionService, VerificacionService>();

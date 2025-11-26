@@ -4,6 +4,8 @@ namespace Core.Interfaces
 {
     public interface IDispositivoService
     {
+        event EventHandler<int>? DispositivoCreated;
+        event EventHandler<int>? DispositivoUpdated;
         Task<(bool success, string message, int? id)> Create(Dispositivo dispositivo);
         Task<(bool success, string message)> Delete(int id);
         Task<(bool success, string message, List<Dispositivo>? dispositivo)> GetAll();

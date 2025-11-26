@@ -23,6 +23,8 @@ namespace UI.ViewModels
         public DispositivosViewModel(IDispositivoService dispositivoService, IServiceProvider serviceProvider)
         {
             _dispositivoService = dispositivoService;
+            _dispositivoService.DispositivoCreated += OnDispositivoCreated;
+            _dispositivoService.DispositivoUpdated += OnDispositivoUpdated;
             _serviceProvider = serviceProvider;
             InitializeAsync();
         }
@@ -84,6 +86,30 @@ namespace UI.ViewModels
                     {
                         Dispositivos.Remove(dispositivo);
                     }
+                }
+            }
+        }
+
+        private async void OnDispositivoCreated(object? sender, int dispositivoId)
+        {
+            var result = await _dispositivoService.GetById(dispositivoId);
+            if (result.success && result.dispositivo != null)
+            {
+                Dispositivos.Add(result.dispositivo);
+            }
+        }
+
+        private async void OnDispositivoUpdated(object? sender, int dispositivoId)
+        {
+            var result = await _dispositivoService.GetById(dispositivoId);
+            if (result.success && result.dispositivo != null)
+            {
+                var existingDispositivo = Dispositivos.FirstOrDefault(d => d.Id == dispositivoId);
+                if (existingDispositivo != null)
+                {
+                    var index = Dispositivos.IndexOf(existingDispositivo);
+                    Dispositivos.RemoveAt(index);
+                    Dispositivos.Insert(index, result.dispositivo);
                 }
             }
         }

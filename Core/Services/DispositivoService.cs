@@ -6,6 +6,10 @@ namespace Core.Services
     public class DispositivoService : IDispositivoService
     {
         private readonly IDispositivoRepository _dispositivoRepository;
+
+        public event EventHandler<int>? DispositivoCreated;
+        public event EventHandler<int>? DispositivoUpdated;
+
         public DispositivoService(IDispositivoRepository dispositivoRepository)
         {
             _dispositivoRepository = dispositivoRepository;
@@ -45,8 +49,14 @@ namespace Core.Services
 
                 if (newId == null)
                 {
-                    return (false, $"Error al crear el dispositivo.", null);                    
+                    return (false, $"Error al crear el dispositivo.", null);
                 }
+
+                if (newId > 0)
+                {
+                    DispositivoCreated?.Invoke(this, newId.Value);
+                }
+
                 return (true, $"Dispositivo creado correctamente con ID: {newId}", newId);
             }
             catch (Exception)
@@ -129,9 +139,15 @@ namespace Core.Services
                 {
                     bool result = await _dispositivoRepository.Update(dispositivo);
 
-                    return result
-                        ? (true, "Dispositivo actualizado correctamente.")
-                        : (false, $"No se encontró el técnico con el ID: {dispositivo.Id}");
+                    if (result && dispositivo.Id.HasValue)
+                    {
+                        DispositivoUpdated?.Invoke(this, dispositivo.Id.Value);
+                        return (true, "Dispositivo actualizado correctamente.");
+                    }
+                    else
+                    {
+                        return (false, $"No se encontró el técnico con el ID: {dispositivo.Id}");
+                    }
                 }
                 catch (Exception)
                 {
