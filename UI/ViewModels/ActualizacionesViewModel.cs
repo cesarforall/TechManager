@@ -89,6 +89,8 @@ namespace UI.ViewModels
 
         private async void OnActualizacionCreated(object? sender, int actualizacionId)
         {
+            await Task.Delay(50);
+
             var result = await _actualizacionService.GetById(actualizacionId);
             if (result.success && result.actualizacion != null)
             {
